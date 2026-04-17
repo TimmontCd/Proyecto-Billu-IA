@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <?!= include('styles'); ?>
+  </head>
+  <body class="auth-gate-active">
+    <div class="shell">
+      <aside class="sidebar">
+        <div>
+          <div class="brand">IA Billu</div>
+          <div class="brand-sub">Hecho por los Billuvers</div>
+        </div>
+        <nav class="menu">
+          <button class="menu-item active" data-view="realtime">Venta en tiempo real</button>
+          <button class="menu-item" data-view="conversion-agent">Agente de Conversión</button>
+          <button class="menu-item" data-view="whatsapp-agent">Agente de Whatsapp</button>
+          <button class="menu-item" data-view="funnel">Agente de Campañas</button>
+          <button class="menu-item" data-view="accounts">Resumen de Productos</button>
+          <button class="menu-item" data-view="customer-categorization">Categorización de clientes</button>
+          <button class="menu-item menu-item-with-tag" data-view="projects">
+            <span class="menu-item-label">Proyectos</span>
+            <span class="menu-item-tag">En Construcción</span>
+          </button>
+          <button class="menu-item" data-view="heatmaps">Mapas de calor</button>
+          <button class="menu-item menu-item-with-tag" data-view="audio">
+            <span class="menu-item-label">Seguimiento de Actividades</span>
+            <span class="menu-item-tag">En Construcción</span>
+          </button>
+          <button
+            class="menu-item menu-item-tincho"
+            data-view="tincho"
+            data-title="Pregunta a BeBot"
+            data-subtitle="Asistente operativo para crear, actualizar y consultar tareas del módulo de Seguimiento de Actividades."
+          >
+            <span class="menu-item-icon menu-item-icon-photo" aria-hidden="true">
+              <img src="<?!= chePhotoDataUrl ?>" alt="BeBot" class="menu-item-photo che-avatar-svg che-avatar-svg-menu">
+            </span>
+            <span>
+              <small>Asistente de tareas</small>
+              <strong>Pregunta a BeBot</strong>
+              <span class="menu-item-tag menu-item-tag-inline">En Construcción</span>
+            </span>
+          </button>
+          <button class="menu-item admin-only" data-view="admin">Administracion</button>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header class="topbar">
+          <div>
+            <h1 id="pageTitle">Venta en tiempo real</h1>
+            <p id="pageSubtitle">Monitoreo operativo en linea para el enrolamiento de Billu.</p>
+          </div>
+          <div class="user-badge">
+            <div id="userName">Cargando...</div>
+            <small id="userRole">-</small>
+            <button id="authLogoutBtn" type="button" class="ghost auth-logout-btn hidden-panel">Cerrar sesión</button>
+          </div>
+        </header>
+
+        <section id="view-dashboard" class="view">
+          <div class="card-grid" id="dashboardKpis"></div>
+          <div class="grid two">
+            <div class="panel">
+              <h3>Resumen de proyectos</h3>
+              <div id="projectSummary"></div>
+            </div>
+            <div class="panel">
+              <h3>Alertas recientes</h3>
+              <div id="alertsList"></div>
+            </div>
+          </div>
+          <div class="grid two">
+            <div class="panel">
+              <h3>Embudo ejecutivo</h3>
+              <div id="funnelSummary"></div>
+            </div>
+            <div class="panel">
+              <h3>Historico ejecutivo</h3>
+              <div id="historicalSummary"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-realtime" class="view active">
+          <div class="realtime-hero">
+            <div class="realtime-hero-main">
+              <div class="realtime-hero-status-row">
+                <div id="realtimeSummary" class="realtime-live-badge">Live Sync</div>
+                <div id="realtimeStatus" class="status-banner hidden realtime-status-inline"></div>
+              </div>
+            </div>
+            <div class="realtime-generated-pill">
+              <span class="realtime-generated-icon" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none">
+                  <path d="M16.2 9.3A6.2 6.2 0 1 1 13.9 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M13.7 2.8v2.7h2.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <div class="realtime-generated-copy">
+                <span>Última actualización</span>
+                <strong id="realtimeGeneratedAt">-</strong>
+              </div>
+            </div>
+          </div>
+          <div id="realtimeFlows" class="realtime-flow-grid"></div>
+          <div class="grid two realtime-hidden-panels">
+            <div class="panel">
+              <h3>Estado de conexion</h3>
+              <div id="realtimeConnection"></div>
+            </div>
+            <div class="panel">
+              <h3>Actividad ultimos 30 min</h3>
+              <div id="realtimeSeries"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-conversion-agent" class="view">
+          <div id="conversionAgentStatus" class="status-banner hidden"></div>
+          <div class="panel">
+            <div class="executive-hero">
+              <div>
+                <div class="section-kicker">Recuperación de aperturas</div>
+                <h3>Agente de Conversión</h3>
+                <p>Leemos el paso pendiente del cliente, buscamos su guía de ayuda y preparamos un correo elegante para retomar la apertura de cuenta.</p>
+              </div>
+              <div class="hero-aside">
+                <div class="hero-aside-label">Fuente</div>
+                <div id="conversionAgentSource" class="hero-aside-value">PASOS + envios</div>
+              </div>
+            </div>
+            <div class="toolbar">
+              <button id="conversionAgentRefreshBtn" type="button" class="primary">Actualizar base</button>
+              <button id="conversionAgentSendReadyBtn" type="button" class="secondary">Enviar base filtrada</button>
+              <select id="conversionAgentStepFilter">
+                <option value="">Todos los pasos</option>
+              </select>
+              <input id="conversionAgentSearch" type="text" placeholder="Busca nombre o correo">
+            </div>
+            <div id="conversionAgentKpis" class="card-grid compact-cards"></div>
+          </div>
+          <div class="grid two conversion-agent-grid">
+            <div class="panel">
+              <h3>Journey operativo</h3>
+              <div id="conversionAgentSteps"></div>
+            </div>
+            <div class="panel">
+              <div class="conversion-agent-preview-head">
+                <div>
+                  <h3>Vista previa del correo</h3>
+                  <div id="conversionAgentPreviewMeta" class="muted-note">Selecciona un registro para ver su correo.</div>
+                </div>
+                <button id="conversionAgentSendSelectedBtn" type="button" class="primary" disabled>Enviar seleccionado</button>
+              </div>
+              <iframe id="conversionAgentPreviewFrame" class="conversion-agent-preview-frame" title="Vista previa del correo"></iframe>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>Base operativa</h3>
+            <div id="conversionAgentRecipients"></div>
+          </div>
+        </section>
+
+        <section id="view-whatsapp-agent" class="view">
+          <div id="whatsappAgentStatus" class="status-banner hidden"></div>
+          <div class="panel">
+            <div class="executive-hero">
+              <div>
+                <div class="section-kicker">Conversación asistida</div>
+                <h3>Agente de WhatsApp</h3>
+                <p>Priorizamos clientes atorados en su apertura, detectamos leads de Meta y preparamos respuestas automáticas con opción de escalar a una persona.</p>
+              </div>
+              <div class="hero-aside">
+                <div class="hero-aside-label">Canal</div>
+                <div id="whatsappAgentSource" class="hero-aside-value">Envios + PASOS</div>
+              </div>
+            </div>
+            <div class="subtab-bar">
+              <button id="whatsappAgentInboundTabBtn" type="button" class="subtab-button active">Inbound (Entrantes)</button>
+              <button id="whatsappAgentOutboundTabBtn" type="button" class="subtab-button">Outbound (Campañas)</button>
+            </div>
+            <div id="whatsappAgentInboundPanel" class="subtab-panel active">
+              <div class="toolbar">
+                <button id="whatsappAgentRefreshBtn" type="button" class="primary">Actualizar base</button>
+              </div>
+              <div id="whatsappAgentKpis" class="card-grid compact-cards"></div>
+              <div class="grid two conversion-agent-grid">
+                <div class="panel">
+                  <h3>Inbox inbound (todos los que escriben)</h3>
+                  <div id="whatsappAgentInboundInbox"></div>
+                </div>
+                <div class="panel">
+                  <h3>Escalamiento humano</h3>
+                  <div id="whatsappAgentHandoff"></div>
+                </div>
+              </div>
+            </div>
+            <div id="whatsappAgentOutboundPanel" class="subtab-panel">
+              <div class="toolbar">
+                <button id="whatsappAgentRefreshOutboundBtn" type="button" class="primary">Actualizar base</button>
+                <button id="whatsappAgentOutboundBtn" type="button" class="secondary">Campaña outbound</button>
+              </div>
+              <div id="whatsappAgentOutboundMeta" class="muted-note">Campaña outbound pendiente de lectura.</div>
+              <div id="whatsappAgentOutboundKpis" class="card-grid compact-cards"></div>
+              <div class="panel">
+                <h3>Lógica outbound</h3>
+                <div class="result-meta">
+                  <div class="realtime-flow-meta-item"><strong>1</strong><span>Lee `CampañaEnrolamiento` y detecta elegibles por teléfono, opt-in y estado.</span></div>
+                  <div class="realtime-flow-meta-item"><strong>2</strong><span>Envía template o texto y guarda trazabilidad de envío, error y message id.</span></div>
+                  <div class="realtime-flow-meta-item"><strong>3</strong><span>Si no hay nuevos elegibles, permite reintento sobre enviados según regla actual.</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>Cómo lo vamos a usar</h3>
+            <div class="result-meta">
+              <div class="realtime-flow-meta-item"><strong>1</strong><span>Si viene de Meta, el bot lo recibe y lo orienta desde el primer mensaje.</span></div>
+              <div class="realtime-flow-meta-item"><strong>2</strong><span>Si ya está en proceso de apertura, el mensaje usa su `Siguiente Paso` para ayudarlo a avanzar.</span></div>
+              <div class="realtime-flow-meta-item"><strong>3</strong><span>Si el cliente pide ayuda humana o el caso se complica, entra a la cola de escalamiento.</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-projects" class="view">
+          <div class="projects-exec-shell">
+            <div class="panel projects-exec-panel">
+              <div class="executive-hero projects-exec-hero">
+                <div>
+                  <div class="section-kicker">Dashboard ejecutivo</div>
+                  <h3>Portafolio de proyectos críticos</h3>
+                  <p>Seguimos el portafolio, los proyectos más sensibles del equipo y las incidencias que requieren lectura ejecutiva inmediata.</p>
+                </div>
+                <div class="toolbar projects-exec-toolbar">
+                  <select id="projectsOwnerFilter" class="projects-filter-select">
+                    <option value="">Todos los responsables</option>
+                  </select>
+                  <select id="projectsPeriodMode" class="projects-filter-select">
+                    <option value="all">Todo el historial</option>
+                    <option value="month">Mensual</option>
+                    <option value="quarter">Trimestral</option>
+                  </select>
+                  <select id="projectsPeriodValue" class="projects-filter-select" disabled>
+                    <option value="">Selecciona periodo</option>
+                  </select>
+                  <select id="projectsViewMode" class="projects-filter-select">
+                    <option value="management">Vista de gestión</option>
+                    <option value="presentation">Vista presentación</option>
+                  </select>
+                  <button id="projectsServiceOrdersBtn" type="button" class="secondary">Órdenes de servicio e incidencias</button>
+                </div>
+              </div>
+
+              <div id="projectsExecutiveKpis" class="projects-kpi-grid"></div>
+
+              <div class="projects-main-grid">
+                <div class="projects-column-card">
+                  <div class="projects-column-head">
+                    <div class="section-kicker">Columna 1</div>
+                    <h4>Proyectos (tramo activo)</h4>
+                  </div>
+                  <div id="projectsColumnProjects" class="projects-column-list"></div>
+                </div>
+                <div class="projects-column-card">
+                  <div class="projects-column-head">
+                    <div class="section-kicker">Columna 2</div>
+                    <h4>Mejoras (valor / esfuerzo)</h4>
+                  </div>
+                  <div id="projectsColumnImprovements" class="projects-column-list"></div>
+                </div>
+                <div class="projects-column-card">
+                  <div class="projects-column-head">
+                    <div class="section-kicker">Columna 3</div>
+                    <h4>Incidencias (nivel de fuego)</h4>
+                  </div>
+                  <div id="projectsColumnIncidents" class="projects-column-list"></div>
+                </div>
+              </div>
+
+              <button id="projectsCriticalCard" type="button" class="projects-critical-entrypoint" aria-haspopup="dialog" aria-controls="projectsIncidentsDrawer">
+                <span id="projectsCriticalChip" class="projects-hero-card-chip">Crítico</span>
+                <strong id="projectsCriticalSummary">Sin incidencias críticas abiertas.</strong>
+                <span class="projects-hero-card-action">Deep Dive</span>
+              </button>
+
+              <div class="projects-critical-board panel projects-critical-board-panel projects-management-only">
+                <div class="projects-board-head">
+                  <div>
+                    <div class="section-kicker">Top 5 proyectos críticos</div>
+                    <h3>Portafolio de atención prioritaria</h3>
+                  </div>
+                  <div class="muted-note">Semáforo, tramo activo y acceso rápido al deep dive.</div>
+                </div>
+                <div id="projectsCriticalBoard"></div>
+              </div>
+            </div>
+
+            <div class="grid two projects-ops-grid projects-management-only">
+              <div class="panel">
+                <div class="section-kicker">Captura manual</div>
+                <h3>Nuevo proyecto</h3>
+                <form id="projectForm" class="form-grid">
+                  <input name="nombre" placeholder="Nombre del proyecto" required>
+                  <input name="area" placeholder="Area" required>
+                  <input name="responsableEmail" placeholder="Responsable" required>
+                  <input name="sponsor" placeholder="Sponsor">
+                  <input name="fechaInicio" type="date">
+                  <input name="fechaCompromiso" type="date" required>
+                  <select name="estatus">
+                    <option value="NOT_STARTED">No iniciado</option>
+                    <option value="IN_PROGRESS">En progreso</option>
+                    <option value="BLOCKED">Bloqueado</option>
+                    <option value="AT_RISK">En riesgo</option>
+                    <option value="DONE">Terminado</option>
+                  </select>
+                  <select name="prioridad">
+                    <option value="MEDIUM">Media</option>
+                    <option value="HIGH">Alta</option>
+                    <option value="CRITICAL">Critica</option>
+                    <option value="LOW">Baja</option>
+                  </select>
+                  <textarea name="descripcion" placeholder="Descripcion"></textarea>
+                  <textarea name="comentarios" placeholder="Comentarios"></textarea>
+                  <button type="submit" class="primary">Guardar proyecto</button>
+                </form>
+              </div>
+
+              <div class="panel">
+                <div class="section-kicker">Portafolio</div>
+                <h3>Mis proyectos / portafolio</h3>
+                <div id="projectsTable"></div>
+              </div>
+            </div>
+
+            <div class="panel projects-management-only">
+              <div class="section-kicker">Seguimiento</div>
+              <h3>Nueva tarea</h3>
+              <form id="taskForm" class="form-grid compact">
+                <input name="proyectoId" placeholder="Project ID" required>
+                <input name="titulo" placeholder="Titulo" required>
+                <input name="responsableEmail" placeholder="Responsable" required>
+                <input name="fechaCompromiso" type="date" required>
+                <input name="avancePct" type="number" min="0" max="100" placeholder="% avance">
+                <button type="submit" class="secondary">Guardar tarea</button>
+              </form>
+            </div>
+          </div>
+
+          <div id="projectsDrawerOverlay" class="projects-drawer-overlay hidden-panel" role="presentation">
+            <aside id="projectsIncidentsDrawer" class="projects-drawer" role="dialog" aria-modal="true" aria-labelledby="projectsDrawerTitle">
+              <div class="projects-drawer-head">
+                <div>
+                  <div class="section-kicker">Deep dive operativo</div>
+                  <h3 id="projectsDrawerTitle">Detalle de Incidencias Críticas</h3>
+                </div>
+                <button id="projectsDrawerCloseBtn" type="button" class="projects-drawer-close" aria-label="Cerrar detalle de incidencias">×</button>
+              </div>
+              <div class="projects-drawer-table-shell">
+                <table class="projects-drawer-table">
+                  <thead>
+                    <tr>
+                      <th><button type="button" class="projects-sort-button" data-project-drawer-sort="id">ID</button></th>
+                      <th><button type="button" class="projects-sort-button" data-project-drawer-sort="titulo">Título</button></th>
+                      <th><button type="button" class="projects-sort-button" data-project-drawer-sort="responsable">Responsable</button></th>
+                      <th><button type="button" class="projects-sort-button" data-project-drawer-sort="estado">Estado</button></th>
+                      <th><button type="button" class="projects-sort-button" data-project-drawer-sort="mttrMinutes">MTTR (Tiempo Medio de Resolución)</button></th>
+                      <th class="projects-drawer-deepdive-col"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="projectsDrawerTableBody"></tbody>
+                </table>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="view-funnel" class="view">
+          <div id="campaignStatus" class="status-banner hidden"></div>
+          <div class="panel">
+            <div class="executive-hero">
+              <div>
+                <div class="section-kicker">Automatización comercial</div>
+                <h3>Agente de Campañas</h3>
+                <p>Concentramos campañas fijas de relacionamiento y su ejecución diaria sobre la base activa de clientes.</p>
+              </div>
+            </div>
+            <div class="toolbar campaign-nav-toolbar">
+              <button id="campaignModeActiveBtn" type="button" class="primary">Campañas activas</button>
+              <button id="campaignModeResultsBtn" type="button" class="secondary">Resultados de campañas</button>
+            </div>
+            <div id="campaignSource" class="muted-note"></div>
+            <div id="campaignKpis" class="card-grid compact-cards"></div>
+          </div>
+
+          <div id="campaignActiveSection" class="panel">
+            <div class="section-kicker">Campañas activas</div>
+            <h3>Motor activo</h3>
+            <div id="campaignActiveTable"></div>
+          </div>
+
+          <div id="campaignResultsSection" class="panel hidden-panel">
+            <div class="section-kicker">Resultados campañas</div>
+            <h3>Desempeño operativo</h3>
+            <div id="campaignResultsPanel" class="campaign-results-grid"></div>
+            <div id="campaignResultsTable" class="campaign-results-table-wrap"></div>
+          </div>
+
+          <div id="campaignPreviewPanel" class="panel hidden-panel">
+            <div class="campaign-preview-head">
+              <div>
+                <div class="section-kicker">Vista previa</div>
+                <h3>Correo de la campaña</h3>
+              </div>
+              <button type="button" class="campaign-preview-close" onclick="closeCampaignProgrammingPreview()" aria-label="Cerrar visualización">X</button>
+            </div>
+            <div id="campaignPreviewMeta" class="muted-note">Selecciona una campaña para ver el correo.</div>
+            <div id="campaignPreviewFrame" class="html-preview empty">Sin vista previa disponible todavía.</div>
+          </div>
+        </section>
+
+        <section id="view-audio" class="view">
+          <div id="taskTrackingStatus" class="status-banner hidden"></div>
+          <div class="panel">
+            <div class="executive-hero">
+              <div>
+                <div class="section-kicker">Seguimiento interno</div>
+                <h3>Tablero de actividades del equipo</h3>
+                <p>Captura, asigna y da seguimiento a actividades internas con responsables autenticados, fechas límite, recordatorios y bitácora de cambios.</p>
+              </div>
+              <div class="hero-aside">
+                <div class="hero-aside-label">Acceso</div>
+                <div class="hero-aside-value">Solo equipo interno</div>
+              </div>
+            </div>
+            <div class="toolbar task-tracking-toolbar">
+              <button id="taskTrackingRefreshBtn" type="button" class="primary">Actualizar tablero</button>
+              <button id="taskTrackingReminderBtn" type="button" class="secondary admin-only">Enviar recordatorios</button>
+              <form id="activityTaskFilterForm" class="toolbar task-tracking-inline-form">
+                <select id="taskTrackingFilterResponsible" name="responsableEmail">
+                  <option value="">Todos los responsables</option>
+                </select>
+                <select id="taskTrackingFilterStatus" name="estadoTarea">
+                  <option value="">Todos los estados</option>
+                  <option value="PENDING">Pendiente</option>
+                  <option value="IN_PROGRESS">En progreso</option>
+                  <option value="COMPLETED">Completada</option>
+                </select>
+                <input id="taskTrackingFilterSearch" name="search" placeholder="Buscar tarea, persona o proyecto">
+                <button type="submit" class="secondary">Aplicar filtros</button>
+              </form>
+            </div>
+            <div id="taskTrackingKpis" class="card-grid compact-cards"></div>
+          </div>
+
+          <div class="grid two">
+            <div class="panel">
+              <div class="section-kicker">Captura manual</div>
+              <h3>Nueva actividad</h3>
+              <form id="activityTaskForm" class="form-grid compact">
+                <input type="hidden" name="id">
+                <input name="titulo" placeholder="Nombre de la actividad" required>
+                <select id="taskResponsibleSelect" name="responsableEmail" required>
+                  <option value="">Selecciona responsable</option>
+                </select>
+                <input name="fechaLimite" type="date" required>
+                <select name="estadoTarea">
+                  <option value="PENDING">Pendiente</option>
+                  <option value="IN_PROGRESS">En progreso</option>
+                  <option value="COMPLETED">Completada</option>
+                </select>
+                <select name="prioridad">
+                  <option value="MEDIUM">Media</option>
+                  <option value="HIGH">Alta</option>
+                  <option value="CRITICAL">Crítica</option>
+                  <option value="LOW">Baja</option>
+                </select>
+                <input name="proyectoId" placeholder="Project ID opcional">
+                <textarea name="descripcion" placeholder="Descripción o contexto"></textarea>
+                <textarea name="comentarios" placeholder="Comentarios o acuerdos"></textarea>
+                <div class="toolbar">
+                  <button id="activityTaskSubmitBtn" type="submit" class="primary">Guardar actividad</button>
+                  <button id="activityTaskCancelEditBtn" type="button" class="secondary hidden-panel">Cancelar edición</button>
+                </div>
+              </form>
+            </div>
+            <div class="panel">
+              <div class="section-kicker">Carga por responsable</div>
+              <h3>Resumen por usuario</h3>
+              <div id="taskTrackingByUser"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="section-kicker">Tablero operativo</div>
+            <h3>Actividades del equipo</h3>
+            <div id="taskTrackingBoard"></div>
+          </div>
+
+          <div class="panel">
+            <div class="section-kicker">Auditoría</div>
+            <h3>Actividad reciente</h3>
+            <p>Aquí se registra quién creó, actualizó o completó cada actividad del equipo.</p>
+            <div id="taskTrackingHistory"></div>
+          </div>
+        </section>
+
+        <section id="view-service-orders" class="view">
+          <div class="panel">
+            <h3>Ordenes de Servicio e Incidencias</h3>
+            <p>Vista consolidada para seguimiento de pipeline de mejoras y severidad de incidencias.</p>
+            <div id="serviceOrdersSummary" class="projects-kpi-grid"></div>
+            <div class="projects-main-grid">
+              <div class="projects-column-card">
+                <div class="projects-column-head">
+                  <div class="section-kicker">Pipeline</div>
+                  <h4>Mejoras / órdenes</h4>
+                </div>
+                <div id="serviceOrdersImprovements" class="projects-column-list"></div>
+              </div>
+              <div class="projects-column-card">
+                <div class="projects-column-head">
+                  <div class="section-kicker">Foco inmediato</div>
+                  <h4>Incidencias críticas y altas</h4>
+                </div>
+                <div id="serviceOrdersIncidents" class="projects-column-list"></div>
+              </div>
+              <div class="projects-column-card">
+                <div class="projects-column-head">
+                  <div class="section-kicker">Vista general</div>
+                  <h4>Proyectos relacionados</h4>
+                </div>
+                <div id="serviceOrdersProjects" class="projects-column-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-heatmaps" class="view">
+          <div class="panel">
+            <div class="executive-hero">
+              <div>
+                <div class="section-kicker">Piloto seguro</div>
+                <h3>Mapa de calor para prototipos nuevos</h3>
+                <p>Estamos corriendo un primer piloto controlado sobre un flujo móvil de <strong>3 pantallas</strong> del enrolamiento N2: <strong>Aviso de privacidad</strong>, <strong>Datos de contacto</strong> y <strong>Código correo</strong>. El objetivo es medir zonas tocadas, coordenadas, intentos bloqueados y tasa de éxito antes de llevar esta lógica al flujo completo.</p>
+              </div>
+              <div class="hero-aside">
+                <div class="hero-aside-label">Definición de éxito</div>
+                <div class="hero-aside-value">Completar las 3 pantallas y confirmar el código</div>
+              </div>
+            </div>
+            <div class="toolbar">
+              <button id="heatmapPilotNewSessionBtn" type="button" class="primary">Iniciar prueba</button>
+              <button id="heatmapPilotRefreshBtn" type="button" class="secondary">Actualizar resultados</button>
+              <button id="heatmapPilotResetBtn" type="button" class="secondary admin-only">Limpiar piloto</button>
+            </div>
+            <div id="heatmapPilotStatus" class="status-banner hidden"></div>
+            <div class="subtab-bar" id="heatmapPilotSubtabs">
+              <button type="button" class="subtab-button active" data-subview="trial">Vista de prueba</button>
+              <button type="button" class="subtab-button" data-subview="results">Vista de resultados</button>
+            </div>
+          </div>
+
+          <div id="heatmapPilotSubView-trial" class="subtab-panel active">
+            <div class="panel heatmap-trial-panel">
+              <div class="section-kicker">Modo de prueba</div>
+              <h3>Flujo mobile-first para el tester</h3>
+              <p>Esta vista queda enfocada solo en la prueba desde móvil. Inicia la sesión, revisa el mensaje de arranque, recorre las 3 pantallas y al terminar verás un mensaje de cierre antes de pasar a resultados.</p>
+              <div class="heatmap-trial-toolbar">
+                <div id="heatmapPilotSessionMeta" class="muted-note"></div>
+                <button id="heatmapPilotOpenResultsBtn" type="button" class="secondary">Ver resultados</button>
+              </div>
+              <div class="heatmap-stage-shell heatmap-stage-shell-mobile">
+                <div id="heatmapPrototypeRoot"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="heatmapPilotSubView-results" class="subtab-panel">
+            <div class="panel heatmap-overview-panel">
+              <div class="section-kicker">Resultado por flujo</div>
+              <h3>Vista agregada del piloto</h3>
+              <p>Aquí ves el rendimiento del flujo completo y la lectura operativa del recorrido en un solo bloque.</p>
+              <div class="heatmap-overview-content">
+                <div id="heatmapPilotKpis" class="card-grid compact-cards"></div>
+                <div class="heatmap-overview-reading">
+                  <div class="heatmap-session-summary-title">Lectura operativa</div>
+                  <div id="heatmapPilotInsights"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="section-kicker">Pantallas del flujo</div>
+              <h3>Heatmap y detalle por pantalla</h3>
+              <p>Usa las flechas para recorrer una pantalla a la vez y revisar su heatmap, tiempo y detalle operativo.</p>
+              <div class="heatmap-screen-carousel-head">
+                <button id="heatmapPilotPrevScreenBtn" type="button" class="secondary heatmap-carousel-arrow" aria-label="Pantalla anterior">&lsaquo;</button>
+                <div id="heatmapPilotScreenCounter" class="heatmap-screen-counter"></div>
+                <button id="heatmapPilotNextScreenBtn" type="button" class="secondary heatmap-carousel-arrow" aria-label="Siguiente pantalla">&rsaquo;</button>
+              </div>
+              <div id="heatmapPilotScreenStage" class="heatmap-screen-stage"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-datasets" class="view">
+          <div class="grid">
+            <div class="panel">
+              <h3>Clientes y transacciones</h3>
+              <p>Vista ejecutiva para seguir apertura, activacion temprana y uso mensual del portafolio.</p>
+              <small>Fuente oficial: hoja <strong>Clientes</strong> y hojas transaccionales de <strong>enero, febrero y marzo 2026</strong>.</small>
+              <div class="toolbar">
+                <button id="depositChargeRebuildBtn" type="button" class="primary admin-only">Actualizar vista ejecutiva</button>
+                <button id="depositChargeQueryBtn" type="button" class="secondary">Analizar Apertura y uso First 30 dias</button>
+              </div>
+              <div id="depositChargeStatus" class="status-banner hidden"></div>
+              <div id="depositChargeKpis" class="card-grid compact-cards"></div>
+              <div class="subtab-bar" id="depositChargeSubtabs">
+                <button type="button" class="subtab-button active" data-subview="overview">Resumen</button>
+                <button type="button" class="subtab-button" data-subview="state">Portafolio por Estado</button>
+                <button type="button" class="subtab-button" data-subview="first30">Apertura First 30</button>
+                <button type="button" class="subtab-button" data-subview="client">Consulta por Cliente</button>
+              </div>
+              <div id="depositChargeSubView-overview" class="subtab-panel active">
+                <div id="depositChargeSummary"></div>
+              </div>
+              <div id="depositChargeSubView-state" class="subtab-panel">
+                <div class="query-block-header">
+                  <h4>Portafolio por Estado</h4>
+                  <p>Resumen ejecutivo del portafolio activo por estado, basado en la hoja cache <strong>CorrelacionesPortafolioEstado</strong>.</p>
+                </div>
+                <div id="depositChargeStateTable"></div>
+              </div>
+              <div id="depositChargeSubView-first30" class="subtab-panel">
+                <div class="query-block">
+                  <div class="query-block-header">
+                    <h4>Apertura y uso First 30 dias</h4>
+                    <p id="depositChargePresetNote">Clientes abiertos en los ultimos 30 dias y su activacion transaccional dentro de sus primeros 30 dias.</p>
+                  </div>
+                  <div id="depositChargePresetDescription" class="muted-note"></div>
+                  <div id="depositChargeQueryResult"></div>
+                </div>
+              </div>
+              <div id="depositChargeSubView-client" class="subtab-panel">
+                <div class="query-block">
+                  <div class="query-block-header">
+                    <h4>Vista por ID CLIENTE</h4>
+                    <p>Busca un ID CLIENTE para ver su ficha ejecutiva, resumen mensual de abonos y cargos, y sus movimientos mas relevantes.</p>
+                  </div>
+                  <div class="toolbar">
+                    <input id="depositChargeClientNumber" placeholder="ID CLIENTE">
+                    <button id="depositChargeClientBtn" type="button" class="secondary">Consultar cliente</button>
+                  </div>
+                  <div id="depositChargeClientResult"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-historical" class="view">
+          <div class="grid two">
+            <div class="panel">
+              <h3>Carga diaria de saldos y ventas</h3>
+              <form id="historicalForm" class="form-grid">
+                <input name="sourceName" placeholder="Nombre archivo o fuente" required>
+                <textarea name="rowsJson" placeholder='JSON array, ejemplo: [{"fecha":"2026-03-19","hora":"09:00","saldo":1200,"venta":300,"canal":"App"}]' required></textarea>
+                <button type="submit" class="primary">Importar historico</button>
+              </form>
+            </div>
+            <div class="panel">
+              <h3>Filtro ejecutivo</h3>
+              <form id="historicalFilterForm" class="form-grid compact">
+                <input name="startDate" type="date">
+                <input name="endDate" type="date">
+                <input name="canal" placeholder="Canal">
+                <input name="producto" placeholder="Producto">
+                <button type="submit" class="secondary">Consultar</button>
+              </form>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>Resumen historico</h3>
+            <div id="historicalTable"></div>
+          </div>
+        </section>
+
+        <section id="view-customer-categorization" class="view">
+          <div id="customerCategorizationStatus" class="status-banner hidden"></div>
+          <div class="panel">
+            <div class="executive-hero">
+              <div>
+                <div class="section-kicker">Segmentacion automatica</div>
+                <h3>Categorización de cliente v0.7.3</h3>
+                <p id="customerCategorizationSummary">Fuente esperada: hoja Clientes para universo activo y hoja Cuentas para historico mensual. La categorizacion combina saldo promedio 3 meses, transacciones y antiguedad.</p>
+              </div>
+              <div class="hero-aside">
+                <div class="hero-aside-label">Fuente</div>
+                <div id="customerCategorizationSource" class="hero-aside-value">-</div>
+              </div>
+            </div>
+            <div class="toolbar customer-categorization-toolbar">
+              <button id="customerCategorizationRefreshBtn" type="button" class="primary">Actualizar segmentos</button>
+              <input id="customerCategorizationRewardsId" class="customer-categorization-query-input" placeholder="ID RECOMPENSAS">
+              <button id="customerCategorizationQueryBtn" type="button" class="secondary">Consultar ID</button>
+            </div>
+            <div id="customerCategorizationKpis" class="card-grid compact-cards"></div>
+          </div>
+
+          <div class="panel customer-categorization-segments-panel">
+            <h3>Niveles de cliente</h3>
+            <p>Descarga la base directa de cada nivel con tarjeta sugerida, transaccionalidad, productos activos y campana personalizada.</p>
+            <div id="customerCategorizationSegments"></div>
+          </div>
+
+          <div id="customerCategorizationQueryPanel" class="panel customer-categorization-query-panel hidden-panel">
+            <h3>Resultado de consulta por ID RECOMPENSAS</h3>
+            <p>Busca el ID desde la barra superior para ver su nivel, tarjeta recomendada y oportunidad comercial dentro del universo activo.</p>
+            <div id="customerCategorizationQueryResult"></div>
+          </div>
+        </section>
+
+        <section id="view-accounts" class="view">
+          <div id="accountsStatus" class="status-banner hidden"></div>
+          <div class="panel">
+            <div class="executive-hero">
+              <div>
+                <div class="section-kicker">Panorama de cuentas</div>
+                <h3>Resumen de Cuentas v0.7.3</h3>
+                <p id="accountsSummary">Conteos operativos y saldos corrientes desde la hoja Clientes.</p>
+              </div>
+              <div class="hero-aside">
+                <div class="hero-aside-label">Fuente</div>
+                <div id="accountsSource" class="hero-aside-value">-</div>
+              </div>
+            </div>
+            <div class="toolbar accounts-subview-toolbar">
+              <button id="accountsRefreshBtn" type="button" class="secondary accounts-subview-button active-tab" data-accounts-subview="summary">Resumen de cuentas</button>
+              <button id="accountsConsumptionBtn" type="button" class="secondary accounts-subview-button" data-accounts-subview="consumption">Plásticos y Consumos</button>
+              <button id="accountsFirst30Btn" type="button" class="secondary accounts-subview-button" data-accounts-subview="first30">Apertura y uso a 30 días</button>
+              <button id="accountsHistoricalBtn" type="button" class="secondary accounts-subview-button" data-accounts-subview="historical">Histórico de cuentas</button>
+            </div>
+            <div id="accountsSummaryPanel">
+              <div id="accountsKpis" class="card-grid compact-cards"></div>
+            </div>
+          </div>
+
+          <div id="accountsProductsPanel" class="panel">
+            <h3>Resumen por producto</h3>
+            <p>Separacion de productos usando cuentas A-ACTIVA y la columna SALDO PROMEDIO HOY de la hoja Clientes.</p>
+            <div id="accountsProducts"></div>
+          </div>
+
+          <div id="accountsConsumptionPanel" class="panel hidden-panel">
+            <h3>Plásticos y Consumos</h3>
+            <p>Integra cobertura de plásticos activados y lectura de consumos de los últimos 3 meses para entender categorías de gasto, comercios de mayor uso y perfil de clientes compradores.</p>
+            <div id="accountsConsumptionCards"></div>
+            <div class="toolbar accounts-consumption-toolbar">
+              <span class="accounts-consumption-toolbar-label">Filtro de periodo</span>
+              <select id="accountsConsumptionPeriodMode" class="projects-filter-select accounts-period-select">
+                <option value="quarter">Trimestral</option>
+                <option value="month">Mensual</option>
+              </select>
+              <select id="accountsConsumptionPeriodValue" class="projects-filter-select accounts-period-select" disabled>
+                <option value="">Selecciona periodo</option>
+              </select>
+            </div>
+            <div id="accountsConsumption"></div>
+          </div>
+
+          <div id="accountsFirst30Panel" class="panel hidden-panel">
+            <h3>Apertura y uso a 30 días</h3>
+            <p>Cohortes mensuales de apertura desde enero 2026, con uso transaccional y cumplimiento de la regla First 30.</p>
+            <div id="accountsFirst30Result"></div>
+          </div>
+
+          <div id="accountsHistoricalPanel" class="panel hidden-panel">
+            <h3>Histórico de cuentas</h3>
+            <p>Analiza la tendencia diaria de aperturas usando la columna C y revisa por mes cuántas cuentas siguen activas, inactivas o migraron a otros estatus.</p>
+
+            <div class="panel accounts-historical-filter-card">
+              <div class="query-block-header">
+                <h4>Tendencia diaria</h4>
+                <p>Selecciona el rango de fechas de apertura para ver la evolución por día.</p>
+              </div>
+              <div class="form-grid compact accounts-historical-range-form">
+                <input id="accountsHistoricalStartDate" type="date">
+                <input id="accountsHistoricalEndDate" type="date">
+                <button id="accountsHistoricalApplyBtn" type="button" class="secondary">Actualizar tendencia</button>
+              </div>
+              <div id="accountsHistoricalTrendMeta" class="result-meta customer-result-meta"></div>
+              <div id="accountsHistoricalChart"></div>
+            </div>
+
+            <div class="panel accounts-historical-month-panel">
+              <div class="query-block-header">
+                <h4>Resumen por mes de aperturas</h4>
+                <p>Vista consolidada por cohorte mensual con aperturas, activación actual, uso transaccional reciente y descarga directa.</p>
+              </div>
+              <div id="accountsHistoricalMonthSummary"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-tincho" class="view">
+          <div id="tinchoStatus" class="status-banner hidden"></div>
+
+          <div class="panel tincho-hero-panel">
+            <div class="tincho-hero">
+              <div>
+                <div class="section-kicker">Asistente operativo</div>
+                <h3>Pregunta a BeBot</h3>
+                <p>BeBot está enfocado en ayudarte con Seguimiento de Actividades: crea tareas, actualiza estatus, consulta tus pendientes y te resume el tablero del equipo en lenguaje natural.</p>
+              </div>
+              <div class="tincho-avatar photo-avatar" aria-hidden="true">
+                <img src="<?!= chePhotoDataUrl ?>" alt="BeBot" class="tincho-photo che-avatar-svg che-avatar-svg-hero">
+              </div>
+            </div>
+          </div>
+
+          <div class="panel tincho-metrics-panel">
+            <div class="section-kicker">Control operativo</div>
+            <h3>Radar del asistente</h3>
+            <div id="tinchoKpis" class="card-grid compact-cards tincho-kpi-grid"></div>
+          </div>
+
+          <div class="grid tincho-console-layout">
+            <div class="panel tincho-console-panel">
+              <div class="tincho-console-head">
+                <div>
+                  <div class="section-kicker">Consola inteligente</div>
+                  <h3>Escríbele a BeBot</h3>
+                </div>
+                <div class="tincho-console-badge">
+                  <span class="tincho-console-badge-dot"></span>
+                  Listo para operar
+                </div>
+              </div>
+
+              <div id="tinchoStarterQuestions" class="tincho-starter-list"></div>
+
+              <form id="tinchoQueryForm" class="tincho-command-form">
+                <div class="tincho-command-shell">
+                  <textarea name="pregunta" id="tinchoQuestionInput" class="tincho-command-input" placeholder="Ej. Crea una actividad para Andrea de validar saldos mañana, o dime qué tengo pendiente hoy." required></textarea>
+                  <div class="tincho-command-actions">
+                    <button type="submit" class="tincho-command-icon tincho-command-send" aria-label="Enviar a BeBot" title="Enviar a BeBot">
+                      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                        <path d="m3.2 10 12.6-5-2.8 10-4.1-2.3-2.5 2 .4-3.7L3.2 10Z" fill="currentColor"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <div id="tinchoVoiceStatus" class="muted-note tincho-voice-status">Escribe una instrucción clara y BeBot la traducirá a acciones o consultas del tablero. La captura por voz queda en preparación para una siguiente versión.</div>
+              </form>
+
+              <div class="tincho-response-shell">
+                <div class="tincho-response-head">
+                  <div class="section-kicker">Resultados</div>
+                  <h4>Respuestas de BeBot</h4>
+                </div>
+                <div id="tinchoConversation" class="tincho-conversation">
+                  <div class="empty">Aquí aparecerán las respuestas de BeBot, sus sugerencias de seguimiento y las actividades relacionadas que encuentre en el tablero.</div>
+                </div>
+              </div>
+
+              <form id="tinchoFeedbackForm" class="form-grid hidden-panel tincho-feedback-form">
+                <input type="hidden" name="queryId">
+                <div class="grid two">
+                  <div>
+                    <label class="field-label" for="tinchoFeedbackUseful">Utilidad</label>
+                    <select id="tinchoFeedbackUseful" name="utilidad" required>
+                      <option value="UTIL">Me sirvio</option>
+                      <option value="NO_UTIL">No me sirvio</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="field-label" for="tinchoFeedbackScore">Calificacion</label>
+                    <select id="tinchoFeedbackScore" name="calificacion" required>
+                      <option value="5">5</option>
+                      <option value="4">4</option>
+                      <option value="3">3</option>
+                      <option value="2">2</option>
+                      <option value="1">1</option>
+                    </select>
+                  </div>
+                </div>
+                <textarea name="comentario" placeholder="Comentario opcional para seguir afinando a BeBot."></textarea>
+                <div class="button-row">
+                  <button type="submit" class="secondary">Guardar feedback</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="panel tincho-side-panel">
+              <div class="section-kicker">Panorama operativo</div>
+              <h3>Estado del asistente</h3>
+              <div id="tinchoIntegrationGrid" class="tincho-integration-grid"></div>
+              <div class="tincho-side-block">
+                <h4>Últimas consultas</h4>
+                <div id="tinchoRecentQueries"></div>
+              </div>
+              <div class="tincho-side-block">
+                <h4>Actividades visibles</h4>
+                <div id="tinchoManuals"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="section-kicker">Uso recomendado</div>
+            <h3>Qué puede hacer BeBot</h3>
+            <p>Esta primera versión está pensada para ayudarte a operar el tablero de actividades sin cambiar de pantalla. La configuración técnica queda resuelta por detrás para que el usuario solo vea la experiencia útil.</p>
+            <div class="tincho-suggestions">
+              <div class="tincho-suggestion-item">
+                <strong>Crear actividades</strong>
+                <div>Ejemplo: "Crea una actividad para Andrea de validar saldos mañana".</div>
+              </div>
+              <div class="tincho-suggestion-item">
+                <strong>Actualizar estatus</strong>
+                <div>Ejemplo: "Marca como completada la actividad seguimiento semanal".</div>
+              </div>
+              <div class="tincho-suggestion-item">
+                <strong>Consultar pendientes</strong>
+                <div>Ejemplo: "Qué pendientes tengo hoy" o "Qué tareas están vencidas".</div>
+              </div>
+              <div class="tincho-suggestion-item">
+                <strong>Resumir el tablero</strong>
+                <div>Ejemplo: "Dame el resumen del equipo" o "Qué sigue esta semana".</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-admin" class="view admin-only">
+          <div class="grid two">
+            <div class="panel">
+              <h3>Bootstrap</h3>
+              <p>Crea o normaliza hojas, carpetas y plantillas en Drive.</p>
+              <button id="bootstrapBtn" class="primary">Ejecutar bootstrap</button>
+            </div>
+            <div class="panel">
+              <h3>Checks operativos</h3>
+              <p>Evalua atrasos, anomalías y envia alertas configuradas.</p>
+              <button id="opsCheckBtn" class="secondary">Correr checks</button>
+              <div id="adminResult"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="authModal" class="auth-modal hidden" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+      <div class="auth-card">
+        <div class="section-kicker">Seguridad Billú</div>
+        <h3 id="authModalTitle">Inicia sesión</h3>
+        <p id="authModalMessage">Captura tu correo corporativo y contraseña para entrar al panel.</p>
+        <div id="authModalFeedback" class="auth-feedback hidden-panel" aria-live="polite"></div>
+
+        <form id="authLoginForm" class="auth-form">
+          <label>
+            Correo
+            <input name="email" type="email" autocomplete="username" placeholder="usuario@afirme.com" required>
+          </label>
+          <label>
+            Contraseña
+            <input name="password" type="password" autocomplete="current-password" placeholder="••••••••••" required>
+          </label>
+          <button type="submit" class="primary">Entrar</button>
+        </form>
+
+        <form id="authChangePasswordForm" class="auth-form hidden-panel">
+          <label>
+            Contraseña actual
+            <input name="currentPassword" type="password" autocomplete="current-password" placeholder="Contraseña actual" required>
+          </label>
+          <label>
+            Nueva contraseña
+            <input name="newPassword" type="password" autocomplete="new-password" placeholder="Nueva contraseña" required>
+          </label>
+          <label>
+            Confirmar nueva contraseña
+            <input name="confirmPassword" type="password" autocomplete="new-password" placeholder="Confirmar nueva contraseña" required>
+          </label>
+          <button type="submit" class="primary">Actualizar contraseña</button>
+        </form>
+
+        <form id="authRequestResetForm" class="auth-form hidden-panel">
+          <label>
+            Correo
+            <input name="email" type="email" autocomplete="email" placeholder="usuario@afirme.com" required>
+          </label>
+          <button type="submit" class="secondary">Enviar código</button>
+        </form>
+
+        <form id="authResetPasswordForm" class="auth-form hidden-panel">
+          <label>
+            Correo
+            <input name="email" type="email" autocomplete="email" placeholder="usuario@afirme.com" required>
+          </label>
+          <label>
+            Código de recuperación
+            <input name="resetToken" type="text" autocomplete="one-time-code" placeholder="Código de recuperación" required>
+          </label>
+          <label>
+            Nueva contraseña
+            <input name="newPassword" type="password" autocomplete="new-password" placeholder="Nueva contraseña" required>
+          </label>
+          <label>
+            Confirmar nueva contraseña
+            <input name="confirmPassword" type="password" autocomplete="new-password" placeholder="Confirmar nueva contraseña" required>
+          </label>
+          <button type="submit" class="primary">Restablecer contraseña</button>
+        </form>
+
+        <div class="auth-links">
+          <button id="authShowLoginBtn" type="button" class="ghost hidden-panel">Volver a iniciar sesión</button>
+          <button id="authShowRequestResetBtn" type="button" class="ghost">¿Olvidaste tu contraseña?</button>
+          <button id="authShowResetTokenFormBtn" type="button" class="ghost hidden-panel">Ya tengo código</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <div id="processingModal" class="processing-modal hidden">
+      <div class="processing-card">
+        <div class="processing-spinner"></div>
+        <h3 id="processingTitle">Procesando archivo</h3>
+        <p id="processingMessage">Estamos cargando y preparando la informacion. Esto puede tardar unos minutos.</p>
+      </div>
+    </div>
+    <div id="confirmModal" class="confirm-modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+      <div id="confirmModalCard" class="confirm-card confirm-card-info">
+        <button id="confirmModalCloseBtn" type="button" class="confirm-close-btn" aria-label="Cerrar">×</button>
+        <div class="confirm-icon" aria-hidden="true">!</div>
+        <h3 id="confirmModalTitle">Confirmar acción</h3>
+        <p id="confirmModalMessage">¿Deseas continuar?</p>
+        <div class="confirm-actions">
+          <button id="confirmModalCancelBtn" type="button" class="secondary">Cancelar</button>
+          <button id="confirmModalConfirmBtn" type="button" class="primary">Continuar</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      window.__APP_INFO__ = <?= JSON.stringify(appInfo) ?>;
+    </script>
+    <?!= include('scripts'); ?>
+  </body>
+</html>

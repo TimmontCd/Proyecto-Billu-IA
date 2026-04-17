@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Presentacion Ejecutiva - Agentes Billu</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      color: #1f2937;
+      margin: 40px;
+      line-height: 1.45;
+    }
+    h1, h2, h3 {
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 28px;
+      margin-top: 0;
+    }
+    h2 {
+      font-size: 22px;
+      margin-top: 28px;
+      border-bottom: 2px solid #dbe3ea;
+      padding-bottom: 6px;
+    }
+    h3 {
+      font-size: 17px;
+      margin-top: 22px;
+    }
+    p {
+      margin: 8px 0 14px 0;
+    }
+    ul {
+      margin: 8px 0 16px 22px;
+    }
+    li {
+      margin: 6px 0;
+    }
+    .meta {
+      color: #475569;
+      font-size: 13px;
+    }
+    .highlight {
+      background: #eef6ff;
+      border-left: 4px solid #2563eb;
+      padding: 12px 14px;
+      margin: 18px 0;
+    }
+    .slide {
+      page-break-before: always;
+    }
+    .slide:first-of-type {
+      page-break-before: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 20px 0;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 9px 10px;
+      vertical-align: top;
+    }
+    th {
+      background: #f8fafc;
+      text-align: left;
+    }
+    .small {
+      font-size: 12px;
+      color: #475569;
+    }
+  </style>
+</head>
+<body>
+  <h1>Presentacion Ejecutiva - Plataforma de Agentes Billu</h1>
+  <p class="meta">Fecha: 6 de abril de 2026</p>
+  <p class="meta">Documento de apoyo para preparar 3 slides ejecutivos ante direccion.</p>
+
+  <div class="highlight">
+    <strong>Mensaje principal:</strong> Billu ya cuenta con una plataforma operativa funcional con capacidades de monitoreo, automatizacion y asistentes. La decision ahora no es rehacerla, sino institucionalizarla, fortalecer su seguridad y escalar los componentes con mayor demanda.
+  </div>
+
+  <h2>Resumen para exponer en 1 minuto</h2>
+  <ul>
+    <li>Hoy ya existe una base operativa real para monitoreo, seguimiento, alertamiento, categorizacion y atencion de primer nivel.</li>
+    <li>La plataforma actual corre principalmente sobre Google Workspace y permite un time to market muy rapido.</li>
+    <li>Ya existe tambien una base escalable de agente de WhatsApp sobre Node.js para evolucionar atencion y campañas.</li>
+    <li>La brecha principal no es de funcionalidad, sino de institucionalizacion: seguridad, ambientes, secretos, soporte, gobierno de datos y escalamiento tecnico.</li>
+  </ul>
+
+  <div class="slide">
+    <h2>Slide 1. Que podemos hacer hoy con los agentes y automatizaciones construidas</h2>
+    <p><strong>Titulo sugerido del slide:</strong> Billu ya opera una capa interna de agentes y automatizacion</p>
+
+    <h3>Mensaje ejecutivo</h3>
+    <p>La plataforma ya resuelve necesidades reales del negocio y del equipo operativo. No es solo un tablero; es una capa de control con automatizaciones y asistentes conectados a fuentes reales.</p>
+
+    <h3>Capacidades actuales</h3>
+    <ul>
+      <li>Monitoreo en tiempo real de enrolamiento Billu N2 y N4.</li>
+      <li>Resumen ejecutivo de cuentas, productos, saldos y plasticos.</li>
+      <li>Analisis de cohortes y comportamiento en los primeros 30 dias.</li>
+      <li>Categorizacion automatica de clientes y exportacion de segmentos.</li>
+      <li>Seguimiento de proyectos, tareas y actividades del equipo.</li>
+      <li>Alertas y recordatorios por correo.</li>
+      <li>Asistente operativo BeBot para consultar, crear y actualizar tareas.</li>
+      <li>Carga de audio, transcripcion y generacion de minutas.</li>
+      <li>Base de agente de WhatsApp para orientacion, contencion y handoff.</li>
+    </ul>
+
+    <h3>Valor para direccion</h3>
+    <ul>
+      <li>Mayor visibilidad operativa.</li>
+      <li>Menor dependencia de consolidaciones manuales.</li>
+      <li>Reaccion mas rapida ante incidencias.</li>
+      <li>Trazabilidad y seguimiento formal del trabajo.</li>
+      <li>Base reusable para nuevos casos de uso.</li>
+    </ul>
+
+    <div class="highlight">
+      <strong>Frase sugerida para decirla en el comite:</strong> "Hoy ya podemos automatizar lectura, seguimiento, alertamiento, segmentacion y atencion de primer nivel; el siguiente paso es volver esta capacidad mas robusta y sostenible."
+    </div>
+  </div>
+
+  <div class="slide">
+    <h2>Slide 2. Como escalamos la plataforma y que debemos fortalecer</h2>
+    <p><strong>Titulo sugerido del slide:</strong> Escalar significa industrializar: mas volumen, mas control, menos riesgo</p>
+
+    <h3>Ruta de escalamiento propuesta</h3>
+    <ul>
+      <li>Mantener Google Workspace como capa agil para tableros, operacion interna y automatizaciones de negocio.</li>
+      <li>Mover los componentes de mayor volumen, interaccion externa o criticidad a una arquitectura mas robusta.</li>
+      <li>Usar el agente Node.js de WhatsApp como base para evolucionar atencion, campañas, OCR y handoff a humano.</li>
+      <li>Separar ambientes DEV, UAT y PROD con configuracion, hojas y credenciales independientes.</li>
+      <li>Centralizar secretos, tokens y configuraciones sensibles.</li>
+      <li>Incorporar una base de datos administrada para modulos conversacionales y de alta concurrencia.</li>
+      <li>Agregar observabilidad, monitoreo tecnico y modelo formal de soporte.</li>
+    </ul>
+
+    <h3>Controles de seguridad ya existentes</h3>
+    <ul>
+      <li>Autenticacion por correo Google.</li>
+      <li>Roles ADMIN y OPERATOR.</li>
+      <li>Sesiones con expiracion e inactividad.</li>
+      <li>Politica minima de contraseñas y lockout por intentos.</li>
+      <li>Bitacora de auditoria.</li>
+      <li>Allowlist de correos externos.</li>
+      <li>Validacion de firma para webhook de WhatsApp.</li>
+    </ul>
+
+    <h3>Brechas a cerrar para institucionalizacion</h3>
+    <ul>
+      <li>La Web App de Apps Script hoy esta expuesta con acceso amplio y debe revisarse.</li>
+      <li>Hay configuraciones y valores sensibles que deben migrarse a un manejo formal de secretos.</li>
+      <li>Persistir solo en Sheets funciona para agilidad, pero limita escalabilidad y concurrencia.</li>
+      <li>Hace falta separar ambientes, responsables, rollback y control de cambios.</li>
+      <li>Se requiere una matriz formal de accesos, propietarios de datos y procedimientos de soporte.</li>
+    </ul>
+
+    <div class="highlight">
+      <strong>Frase sugerida para decirla en el comite:</strong> "La solucion ya funciona; el riesgo principal hoy no es funcional, sino de sostenibilidad, seguridad, gobierno y escalamiento."
+    </div>
+  </div>
+
+  <div class="slide">
+    <h2>Slide 3. Licencias, APIs conectadas, servicios integrados y costo estimado</h2>
+    <p><strong>Titulo sugerido del slide:</strong> La operacion base tiene costo bajo; el gasto variable depende del uso de canales e IA</p>
+
+    <h3>APIs y servicios conectados hoy</h3>
+    <ul>
+      <li>Google Sheets, Drive, Docs, Gmail y Apps Script.</li>
+      <li>Google Analytics Data API (GA4).</li>
+      <li>Google Speech-to-Text.</li>
+      <li>Google Text-to-Speech.</li>
+      <li>Outlook via webhook para aperturas reales.</li>
+      <li>WhatsApp Cloud API / Meta.</li>
+      <li>OpenAI para OCR / vision en el agente Node cuando se habilite.</li>
+      <li>Brevo como opcion de correo transaccional.</li>
+    </ul>
+
+    <h3>Licencias o suscripciones requeridas</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Componente</th>
+          <th>Estatus</th>
+          <th>Uso</th>
+          <th>Costo de referencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Google Workspace Business Standard</td>
+          <td>Base recomendada</td>
+          <td>Correo, Drive, Sheets, Docs, Meet, Apps Script</td>
+          <td>US$14 por usuario/mes</td>
+        </tr>
+        <tr>
+          <td>Google Workspace Business Plus</td>
+          <td>Upgrade recomendado si se busca mas compliance</td>
+          <td>Vault, retencion, endpoint management ampliado</td>
+          <td>US$22 por usuario/mes</td>
+        </tr>
+        <tr>
+          <td>Google Cloud Billing</td>
+          <td>Solo si se usa voz/transcripcion</td>
+          <td>Speech-to-Text y Text-to-Speech</td>
+          <td>Pago por consumo</td>
+        </tr>
+        <tr>
+          <td>Meta / WhatsApp Business Platform</td>
+          <td>Necesario para canal WhatsApp</td>
+          <td>Mensajeria conversacional y templates</td>
+          <td>Pago variable por conversacion y pais</td>
+        </tr>
+        <tr>
+          <td>OpenAI API</td>
+          <td>Opcional, segun caso de uso</td>
+          <td>OCR, vision, clasificacion y respuestas IA</td>
+          <td>Pago por tokens</td>
+        </tr>
+        <tr>
+          <td>Brevo</td>
+          <td>Opcional</td>
+          <td>Correo transaccional formal</td>
+          <td>Desde aprox. US$18/mes</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Rango simple de costo mensual</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Escenario</th>
+          <th>Base fija estimada</th>
+          <th>No incluye</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>5 usuarios con Workspace Standard</td>
+          <td>US$70 a US$90 / mes</td>
+          <td>Consumo de WhatsApp, OpenAI, Speech y hosting futuro</td>
+        </tr>
+        <tr>
+          <td>10 usuarios con Workspace Standard</td>
+          <td>US$140 a US$180 / mes</td>
+          <td>Consumo de WhatsApp, OpenAI, Speech y hosting futuro</td>
+        </tr>
+        <tr>
+          <td>10 usuarios con Workspace Plus</td>
+          <td>US$220 a US$260 / mes</td>
+          <td>Consumo de WhatsApp, OpenAI, Speech y hosting futuro</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="small">Nota: los costos variables mas sensibles son WhatsApp por conversacion, OpenAI por tokens y Google Cloud por audio procesado o sintetizado. Conviene presentarlos como consumo variable y no como costo fijo.</p>
+
+    <div class="highlight">
+      <strong>Frase sugerida para decirla en el comite:</strong> "La licencia base para operar es relativamente baja; el costo crece de forma controlada conforme activamos mas canales, mas IA y mas volumen."
+    </div>
+  </div>
+
+  <div class="slide">
+    <h2>Backup. Preguntas probables y respuestas sugeridas</h2>
+
+    <h3>Que agentes tenemos hoy?</h3>
+    <p>Tenemos agentes y automatizaciones para monitoreo en tiempo real, seguimiento operativo, categorizacion de clientes, minutas desde audio y una base de agente de WhatsApp para orientacion y handoff.</p>
+
+    <h3>Con que APIs estamos conectados?</h3>
+    <p>Con Google Workspace, GA4, Speech-to-Text, Text-to-Speech, Outlook webhook, WhatsApp Cloud API y OpenAI opcional para OCR/vision.</p>
+
+    <h3>Que riesgo existe si lo dejamos como esta?</h3>
+    <p>El riesgo principal no es que deje de funcionar funcionalmente, sino que siga dependiendo de configuraciones manuales, sin ambientes formales, sin manejo robusto de secretos y con escalabilidad limitada en algunos modulos.</p>
+
+    <h3>Que se necesita para institucionalizar?</h3>
+    <p>Tres cosas: gobierno claro, endurecimiento tecnico y un modelo formal de operacion y soporte.</p>
+
+    <h3>Que decision le estamos pidiendo a direccion?</h3>
+    <p>Patrocinio formal, definicion de dueños, aprobacion para separar ambientes y presupuesto base para licencias, seguridad y escalamiento controlado.</p>
+  </div>
+</body>
+</html>

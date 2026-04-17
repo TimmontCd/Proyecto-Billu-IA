@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Diagramas de Arquitectura y Flujos de Billú</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: #17352d;
+      margin: 32px 46px;
+      line-height: 1.45;
+      font-size: 11.5pt;
+    }
+    h1, h2, h3, h4 {
+      color: #12362d;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 24pt;
+      margin-top: 0;
+      border-bottom: 3px solid #16b4b0;
+      padding-bottom: 10px;
+    }
+    h2 {
+      font-size: 17pt;
+      margin-top: 28px;
+      border-bottom: 1px solid #cfe7e4;
+      padding-bottom: 6px;
+    }
+    h3 {
+      font-size: 13pt;
+      margin-top: 22px;
+    }
+    h4 {
+      font-size: 11.5pt;
+      margin-top: 18px;
+    }
+    p {
+      margin: 8px 0;
+    }
+    ul, ol {
+      margin-top: 6px;
+      margin-bottom: 8px;
+    }
+    li {
+      margin: 3px 0;
+    }
+    .meta {
+      background: #eff9f8;
+      border: 1px solid #d3efec;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin: 14px 0 20px;
+    }
+    .diagram {
+      background: #f7fbfb;
+      border: 1px solid #d5e8e6;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin: 12px 0 18px;
+    }
+    pre {
+      font-family: Menlo, Monaco, "Courier New", monospace;
+      font-size: 9pt;
+      line-height: 1.35;
+      white-space: pre-wrap;
+      margin: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 18px;
+      table-layout: fixed;
+    }
+    th, td {
+      border: 1px solid #d9e7e4;
+      padding: 8px 10px;
+      vertical-align: top;
+      text-align: left;
+      word-break: break-word;
+    }
+    th {
+      background: #eaf7f5;
+      color: #174b41;
+      font-weight: 700;
+    }
+    .small {
+      font-size: 10pt;
+      color: #4c6c66;
+    }
+    .page-break {
+      page-break-before: always;
+    }
+    .pill {
+      display: inline-block;
+      background: #e3f7f4;
+      color: #0b766f;
+      border: 1px solid #bfe9e3;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 9.5pt;
+      margin-right: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Diagramas de Arquitectura y Flujos de Billú</h1>
+
+  <div class="meta">
+    <p><strong>Proyecto:</strong> Billú / Control Tower Directiva</p>
+    <p><strong>Fecha de corte:</strong> 15 de abril de 2026</p>
+    <p><strong>Base analizada:</strong> repositorio Apps Script, módulo Node/TypeScript de WhatsApp, documentación técnica institucional y manifiestos de operación en el workspace del proyecto.</p>
+    <p><strong>Propósito:</strong> documentar arquitectura, flujos operativos, componentes, dependencias y puntos de integración para facilitar institucionalización, soporte, continuidad y transferencia operativa.</p>
+  </div>
+
+  <h2>1. Resumen ejecutivo</h2>
+  <p>La plataforma Billú está construida principalmente como una <strong>Web App en Google Apps Script</strong> con almacenamiento operativo sobre <strong>Google Sheets</strong>, integración documental con <strong>Google Drive / Google Docs</strong> y conectores hacia APIs externas como Google Analytics, correo, OpenAI y Meta/WhatsApp. El proyecto también incorpora un backend evolutivo en <strong>Node.js + TypeScript + Express</strong> para institucionalizar el agente de WhatsApp en una arquitectura más robusta.</p>
+  <p>Desde el punto de vista funcional, la solución ya cubre monitoreo en tiempo real, resúmenes ejecutivos de cuentas, análisis de uso y cohortes, correlación de depósitos y cargos, categorización de clientes, PMO, task tracking, campañas y asistentes operativos. La base sigue una arquitectura por capas con <strong>controllers</strong>, <strong>services</strong>, <strong>repositories</strong>, <strong>views</strong> y un <strong>core</strong> de autenticación, configuración, bootstrap y triggers.</p>
+
+  <h2>2. Vista de arquitectura general</h2>
+
+  <h3>2.1 Arquitectura lógica de alto nivel</h3>
+  <div class="diagram">
+    <pre>+---------------------------+        +--------------------------------------+
+| Usuarios internos Billú   |        | Canales y fuentes externas           |
+| - Dirección               |        | - Google Analytics / GA4             |
+| - Operación               |        | - Outlook / aperturas reales         |
+| - Marketing / campañas    |        | - Mail / notificaciones              |
+| - PMO / seguimiento       |        | - OpenAI / audio / visión / prompts  |
++-------------+-------------+        | - Meta / WhatsApp Cloud API          |
+              |                      +------------------+-------------------+
+              | Web browser / HTTPS                      |
+              v                                          v
+   +---------------------------------------------------------------------+
+   | Google Apps Script Web App                                          |
+   |                                                                     |
+   |  +-------------------+    +-------------------+    +--------------+ |
+   |  | Views (HTML/CSS)  | -> | Controllers       | -> | Services     | |
+   |  | scripts.html      |    | modulo por modulo |    | negocio      | |
+   |  +-------------------+    +-------------------+    +------+-------+ |
+   |                                                           |         |
+   |                                                           v         |
+   |                                                  +----------------+ |
+   |                                                  | BaseRepository | |
+   |                                                  +--------+-------+ |
+   +-----------------------------------------------------------|---------+
+                                                               |
+                                                               v
+                 +--------------------------------------------------------------+
+                 | Persistencia y artefactos de negocio                         |
+                 | - Google Sheets (fuente operativa principal)                 |
+                 | - Google Drive (archivos, cargas, exportables, audio)        |
+                 | - Google Docs (minutas / documentos generados)               |
+                 | - Script Properties / configuración                          |
+                 +--------------------------------------------------------------+</pre>
+  </div>
+
+  <h3>2.2 Arquitectura de despliegue actual y objetivo</h3>
+  <div class="diagram">
+    <pre>ARQUITECTURA ACTUAL
+
+  Navegador usuario
+          |
+          v
+  Apps Script Web App
+          |
+          +--> Controllers / Services / Repository
+          |
+          +--> Google Sheets
+          +--> Google Drive / Docs
+          +--> UrlFetchApp -> APIs externas
+          +--> ScriptApp Triggers
+
+
+ARQUITECTURA EVOLUTIVA PARA WHATSAPP
+
+  Meta / WhatsApp Cloud API
+          |
+          v
+  Node.js + TypeScript + Express (whatsapp-agent-node)
+          |
+          +--> Validación X-Hub-Signature-256
+          +--> Deduplicación por messageId
+          +--> OpenAI Vision / clasificación
+          +--> Respuesta al cliente por Cloud API
+          +--> Integración con base operativa Billú
+
+  Nota:
+  El backend Node existe en el repositorio como arquitectura objetivo.
+  La PoC operativa rápida sigue viviendo en Apps Script.</pre>
+  </div>
+
+  <h3>2.3 Capas y responsabilidades</h3>
+  <table>
+    <tr>
+      <th style="width: 17%;">Capa</th>
+      <th style="width: 33%;">Responsabilidad</th>
+      <th style="width: 50%;">Archivos / ejemplos</th>
+    </tr>
+    <tr>
+      <td><strong>core</strong></td>
+      <td>Configuración, autenticación, respuestas, bootstrap, entrypoints, utilerías y jobs programados.</td>
+      <td><code>src/core/01_Config.gs</code>, <code>08_App.gs</code>, <code>09_Run.gs</code>, <code>06_Auth.gs</code></td>
+    </tr>
+    <tr>
+      <td><strong>controllers</strong></td>
+      <td>Punto de entrada por módulo; validan contexto y delegan a servicios.</td>
+      <td><code>AccountsController.gs</code>, <code>CampaignProgrammingController.gs</code>, <code>WhatsAppAgentController.gs</code></td>
+    </tr>
+    <tr>
+      <td><strong>services</strong></td>
+      <td>Lógica de negocio, cálculo de KPIs, integración con APIs, transformaciones, caché y exportaciones.</td>
+      <td><code>AccountsService.gs</code>, <code>RealtimeMonitoringService.gs</code>, <code>TaskTrackingService.gs</code></td>
+    </tr>
+    <tr>
+      <td><strong>repositories</strong></td>
+      <td>Acceso genérico a Google Sheets con normalización de encabezados y CRUD base.</td>
+      <td><code>src/repositories/BaseRepository.gs</code></td>
+    </tr>
+    <tr>
+      <td><strong>views</strong></td>
+      <td>Interfaz del panel, tabs, renderers, loaders y llamadas a controladores del backend.</td>
+      <td><code>src/views/index.html</code>, <code>src/views/partials/scripts.html</code></td>
+    </tr>
+    <tr>
+      <td><strong>dist</strong></td>
+      <td>Salida preparada para despliegue del Web App.</td>
+      <td><code>dist/</code></td>
+    </tr>
+  </table>
+
+  <h2>3. Inventario funcional y de componentes</h2>
+  <p><span class="pill">Monitoreo en tiempo real</span><span class="pill">Resumen de cuentas</span><span class="pill">Cohortes First 30</span><span class="pill">Depósitos vs cargos</span><span class="pill">Categorización</span><span class="pill">Campañas</span><span class="pill">Proyectos</span><span class="pill">Task tracking</span><span class="pill">BeBot / Tincho</span><span class="pill">Audio y minutas</span><span class="pill">WhatsApp Agent</span></p>
+
+  <table>
+    <tr>
+      <th style="width: 25%;">Módulo</th>
+      <th style="width: 35%;">Qué resuelve</th>
+      <th style="width: 40%;">Componentes principales</th>
+    </tr>
+    <tr>
+      <td><strong>Monitoreo en tiempo real</strong></td>
+      <td>Supervisión de enrolamiento Billú N2 / N4, buffers, alertas y cache operativo.</td>
+      <td><code>RealtimeMonitoringController</code>, <code>RealtimeMonitoringService</code>, <code>AnalyticsService</code>, <code>AlertService</code></td>
+    </tr>
+    <tr>
+      <td><strong>Resumen de cuentas y productos</strong></td>
+      <td>KPIs de cuentas, saldos, productos, plásticos, históricos y aperturas.</td>
+      <td><code>AccountsController</code>, <code>AccountsService</code>, <code>CustomerTransactionSourceService</code></td>
+    </tr>
+    <tr>
+      <td><strong>Depósitos y cargos</strong></td>
+      <td>Correlación cliente-transacción, cohortes tempranas, reconstrucción de caché y exportables.</td>
+      <td><code>DepositChargeController</code>, <code>DepositChargeCorrelationService</code>, <code>DepositChargeImportService</code></td>
+    </tr>
+    <tr>
+      <td><strong>Categorización</strong></td>
+      <td>Segmentación de clientes, venta cruzada y exportación de cohortes por reglas de negocio.</td>
+      <td><code>CustomerCategorizationController</code>, <code>CustomerCategorizationService</code></td>
+    </tr>
+    <tr>
+      <td><strong>Campañas</strong></td>
+      <td>Programación, selección dinámica, vista previa, envío y resultados de campañas.</td>
+      <td><code>CampaignProgrammingController</code>, <code>CampaignProgrammingService</code>, <code>MailService</code></td>
+    </tr>
+    <tr>
+      <td><strong>Agente de conversión</strong></td>
+      <td>Apoyo comercial de contacto y batch outreach.</td>
+      <td><code>ConversionAgentController</code>, <code>ConversionAgentService</code></td>
+    </tr>
+    <tr>
+      <td><strong>WhatsApp Agent</strong></td>
+      <td>Dashboard, campañas outbound y handoff a humano sobre WhatsApp.</td>
+      <td><code>WhatsAppAgentController</code>, <code>WhatsAppAgentService</code>, <code>08_App.gs</code>, backend Node evolutivo</td>
+    </tr>
+    <tr>
+      <td><strong>Proyectos / PMO</strong></td>
+      <td>Portafolio, tareas, avances, semáforos y órdenes de servicio.</td>
+      <td><code>ProjectController</code>, <code>ProjectService</code></td>
+    </tr>
+    <tr>
+      <td><strong>Seguimiento de actividades</strong></td>
+      <td>Creación, priorización, vencimientos, recordatorios y tablero operativo.</td>
+      <td><code>TaskTrackingController</code>, <code>TaskTrackingService</code>, <code>AlertService</code></td>
+    </tr>
+    <tr>
+      <td><strong>BeBot / Tincho</strong></td>
+      <td>Asistente operativo orientado a tareas y consulta del tablero.</td>
+      <td><code>TinchoController</code>, <code>TinchoService</code>, <code>TaskTrackingService</code></td>
+    </tr>
+    <tr>
+      <td><strong>Audio / minutas</strong></td>
+      <td>Carga de audio, procesamiento documental y generación de minuta.</td>
+      <td><code>AudioController</code>, <code>AudioService</code>, <code>DriveService</code>, <code>DocumentService</code></td>
+    </tr>
+  </table>
+
+  <div class="page-break"></div>
+
+  <h2>4. Diagramas de flujo de procesos</h2>
+
+  <h3>4.1 Flujo base de navegación del panel</h3>
+  <div class="diagram">
+    <pre>Usuario interno
+    |
+    v
+Abre URL del Web App
+    |
+    v
+doGet(e) en Apps Script
+    |
+    +--> valida modo / acción / mantenimiento
+    |
+    v
+HtmlService entrega interfaz
+    |
+    v
+Frontend carga scripts y estado
+    |
+    v
+Invoca controladores via google.script.run
+    |
+    v
+Controller del módulo
+    |
+    v
+Service de negocio
+    |
+    +--> BaseRepository / Sheets
+    +--> Drive / Docs
+    +--> UrlFetchApp / APIs
+    |
+    v
+ApiResponse
+    |
+    v
+Render de vista / métricas / tablas / alertas</pre>
+  </div>
+
+  <h3>4.2 Flujo de autenticación y control de acceso</h3>
+  <div class="diagram">
+    <pre>Usuario captura correo y contraseña
+            |
+            v
+authLoginController(payload)
+            |
+            v
+AuthService.login(...)
+            |
+            +--> valida usuario existente
+            +--> valida hash / contraseña
+            +--> valida rol y estatus
+            +--> crea sesión con expiración
+            |
+            v
+Frontend recibe sesión
+            |
+            +--> si requiere cambio de contraseña
+            |       muestra flujo de actualización
+            |
+            +--> si es sesión válida
+                    libera acceso a módulos autorizados
+
+Recuperación de contraseña
+    |
+    +--> authRequestPasswordResetController
+    +--> emisión de código / token
+    +--> authResetPasswordController
+    +--> nuevo acceso</pre>
+  </div>
+
+  <h3>4.3 Flujo de monitoreo en tiempo real</h3>
+  <div class="diagram">
+    <pre>Fuentes de monitoreo
+  +--------------------+        +-------------------------+
+  | Google Analytics   |        | Outlook / aperturas     |
+  | eventos de funnel  |        | reales vía webhook      |
+  +----------+---------+        +------------+------------+
+             |                               |
+             +---------------+---------------+
+                             |
+                             v
+                 RealtimeMonitoringService
+                             |
+           +-----------------+------------------+
+           |                                    |
+           v                                    v
+   sincronización 1 min                 consolidación 5 min
+   buffer operativo                     cache y semaforización
+           |                                    |
+           +-----------------+------------------+
+                             |
+                             v
+                  detección de anomalías / alertas
+                             |
+                             v
+                       AlertService / MailService
+                             |
+                             v
+                  Dashboard ejecutivo en tiempo real</pre>
+  </div>
+
+  <h3>4.4 Flujo de resumen de cuentas, históricos y plásticos</h3>
+  <div class="diagram">
+    <pre>Hoja Clientes / fuentes auxiliares
+            |
+            v
+AccountsService.getDashboard()
+            |
+            +--> conteo de cuentas
+            +--> saldo total
+            +--> activas / inactivas
+            +--> distribución por producto
+            +--> distribución geográfica
+            +--> First 30
+            +--> plásticos activados
+            |
+            v
+AccountsController
+            |
+            v
+Vista "Resumen de Productos" / "Plásticos y consumos"</pre>
+  </div>
+
+  <h3>4.5 Flujo de correlación de depósitos y cargos</h3>
+  <div class="diagram">
+    <pre>Fuentes transaccionales
+    |
+    +--> bundles / workbook / carga manual
+    |
+    v
+DepositChargeImportService
+    |
+    v
+DepositChargeCorrelationService
+    |
+    +--> normaliza universo de clientes
+    +--> cruza depósitos, cargos y cohortes
+    +--> construye cache ejecutivo
+    +--> exporta cohortes / vistas
+    |
+    v
+DepositChargeController
+    |
+    v
+Dashboard ejecutivo / vista por cliente / exportables</pre>
+  </div>
+
+  <h3>4.6 Flujo de categorización de clientes</h3>
+  <div class="diagram">
+    <pre>Base de clientes + histórico transaccional + saldos
+                    |
+                    v
+CustomerCategorizationService
+                    |
+                    +--> calcula variables:
+                    |    saldo promedio, transacciones,
+                    |    antigüedad, productos activos,
+                    |    productos faltantes
+                    |
+                    +--> asigna segmento:
+                    |    Exploradores / Constructores / Aliados Premium
+                    |
+                    +--> propone venta cruzada / tarjeta / campaña
+                    |
+                    v
+CustomerCategorizationController
+                    |
+                    v
+Dashboard + exportación CSV + consulta por ID recompensas</pre>
+  </div>
+
+  <h3>4.7 Flujo de campañas programadas</h3>
+  <div class="diagram">
+    <pre>Operador / admin
+      |
+      v
+CampaignProgrammingController
+      |
+      +--> getCampaignProgrammingDashboardController
+      +--> previewCampaignProgrammingEmailController
+      +--> saveCampaignProgrammingController
+      +--> sendCampaignProgrammingController
+      |
+      v
+CampaignProgrammingService
+      |
+      +--> lee configuración / base elegible
+      +--> calcula clientes que aplican hoy
+      +--> arma vista previa
+      +--> ejecuta envío (MailService)
+      +--> registra resultados / caché
+      |
+      v
+Motor activo de campañas y resultados</pre>
+  </div>
+
+  <h3>4.8 Flujo del agente de WhatsApp</h3>
+  <div class="diagram">
+    <pre>Meta / WhatsApp
+      |
+      v
+Webhook
+  - Actual: Apps Script doPost(e)
+  - Evolutivo: Node / Express
+      |
+      v
+Parseo de payload
+      |
+      +--> deduplicación por messageId
+      +--> clasificación de intención
+      +--> OCR / Vision si llega imagen
+      +--> reglas de negocio / guardrails
+      |
+      v
+Respuesta automática o handoff a humano
+      |
+      v
+WhatsAppAgentService / dashboard / outbound campaigns</pre>
+  </div>
+
+  <h3>4.9 Flujo de PMO, órdenes de servicio e incidencias</h3>
+  <div class="diagram">
+    <pre>Equipo interno / PMO
+      |
+      v
+ProjectController
+      |
+      +--> listProjectsController
+      +--> saveProjectController
+      +--> getProjectDetailController
+      +--> saveTaskController
+      +--> saveAdvanceController
+      |
+      v
+ProjectService
+      |
+      +--> consolida proyecto
+      +--> recalcula avance promedio
+      +--> determina semáforo de riesgo
+      +--> agrega órdenes de servicio e incidencias
+      |
+      v
+Dashboard de proyectos / detalle / semaforización</pre>
+  </div>
+
+  <h3>4.10 Flujo de actividades y BeBot</h3>
+  <div class="diagram">
+    <pre>Usuario interno
+      |
+      +--> crea / actualiza tarea
+      |        |
+      |        v
+      |   TaskTrackingController
+      |        |
+      |        v
+      |   TaskTrackingService
+      |        |
+      |        +--> guarda en Sheets
+      |        +--> calcula vencimientos
+      |        +--> emite recordatorios
+      |
+      +--> consulta a BeBot / Tincho
+               |
+               v
+         TinchoController
+               |
+               v
+         TinchoService
+               |
+               +--> responde en modo TASK_ONLY
+               +--> consulta TaskTrackingService
+               |
+               v
+         Resumen, pendientes y acciones sugeridas</pre>
+  </div>
+
+  <h3>4.11 Flujo de audio y generación de minutas</h3>
+  <div class="diagram">
+    <pre>Usuario carga archivo de audio
+         |
+         v
+uploadAudioController
+         |
+         v
+AudioService
+         |
+         +--> resguarda archivo en Drive
+         +--> prepara metadatos / referencia
+         |
+         v
+generateMinuteController
+         |
+         v
+AudioService
+         |
+         +--> procesa audio / transcripción
+         +--> genera minuta
+         +--> usa DriveService / DocumentService
+         |
+         v
+Documento final en Google Docs / Drive</pre>
+  </div>
+
+  <h3>4.12 Flujo de triggers y automatización</h3>
+  <div class="diagram">
+    <pre>ScriptApp Triggers (Apps Script)
+    |
+    +--> runBirthdayCampaignDaily()           diario 17:10
+    +--> runCustomerTransactionDailyRefresh() diario 10:00
+    +--> runRealtimeMonitoringLiveSync()      cada 1 min
+    +--> runRealtimeMonitoringCacheSync()     cada 5 min
+    +--> runRealtimeMonitoringAlertCheck()    cada 5 min
+    |
+    v
+Servicios operativos
+    |
+    +--> refresco de campañas
+    +--> sincronización transaccional
+    +--> monitoreo en tiempo real
+    +--> alertamiento por correo</pre>
+  </div>
+
+  <div class="page-break"></div>
+
+  <h2>5. Matriz de dependencias entre componentes</h2>
+
+  <h3>5.1 Dependencias Controller -> Service</h3>
+  <table>
+    <tr>
+      <th style="width: 32%;">Controller</th>
+      <th style="width: 68%;">Dependencias principales</th>
+    </tr>
+    <tr><td><code>AccountsController.gs</code></td><td><code>AccountsService</code></td></tr>
+    <tr><td><code>AppController.gs</code></td><td><code>AlertService</code>, <code>AuthService</code>, <code>BaseRepository</code>, <code>DashboardService</code></td></tr>
+    <tr><td><code>AudioController.gs</code></td><td><code>AudioService</code>, <code>AuthService</code></td></tr>
+    <tr><td><code>AuthController.gs</code></td><td><code>AuthService</code></td></tr>
+    <tr><td><code>CampaignProgrammingController.gs</code></td><td><code>AuthService</code>, <code>CampaignProgrammingService</code></td></tr>
+    <tr><td><code>ConversionAgentController.gs</code></td><td><code>AuthService</code>, <code>ConversionAgentService</code></td></tr>
+    <tr><td><code>CustomerCategorizationController.gs</code></td><td><code>CustomerCategorizationService</code></td></tr>
+    <tr><td><code>DatasetController.gs</code></td><td><code>AuthService</code>, <code>DatasetService</code></td></tr>
+    <tr><td><code>DepositChargeController.gs</code></td><td><code>AuthService</code>, <code>DepositChargeCorrelationService</code>, <code>DepositChargeDebugService</code></td></tr>
+    <tr><td><code>DepositChargeImportController.gs</code></td><td><code>AuthService</code>, <code>DepositChargeImportService</code></td></tr>
+    <tr><td><code>FunnelController.gs</code></td><td><code>AnalyticsService</code>, <code>AuthService</code>, <code>FunnelService</code></td></tr>
+    <tr><td><code>HistoricalController.gs</code></td><td><code>AuthService</code>, <code>HistoricalService</code></td></tr>
+    <tr><td><code>ProjectController.gs</code></td><td><code>AuthService</code>, <code>ProjectService</code></td></tr>
+    <tr><td><code>PrototypeHeatmapController.gs</code></td><td><code>AuthService</code>, <code>PrototypeHeatmapService</code></td></tr>
+    <tr><td><code>RealtimeMonitoringController.gs</code></td><td><code>AuthService</code>, <code>RealtimeMonitoringService</code></td></tr>
+    <tr><td><code>TaskTrackingController.gs</code></td><td><code>AuthService</code>, <code>TaskTrackingService</code></td></tr>
+    <tr><td><code>TinchoController.gs</code></td><td><code>AuthService</code>, <code>TinchoService</code></td></tr>
+    <tr><td><code>WhatsAppAgentController.gs</code></td><td><code>AuthService</code>, <code>WhatsAppAgentService</code></td></tr>
+  </table>
+
+  <h3>5.2 Dependencias Service -> Service / Repository</h3>
+  <table>
+    <tr>
+      <th style="width: 32%;">Service</th>
+      <th style="width: 68%;">Dependencias principales</th>
+    </tr>
+    <tr><td><code>AccountsService.gs</code></td><td><code>CustomerTransactionSourceService</code></td></tr>
+    <tr><td><code>AlertService.gs</code></td><td><code>BaseRepository</code>, <code>FunnelService</code>, <code>HistoricalService</code>, <code>MailService</code>, <code>RealtimeMonitoringService</code>, <code>TaskTrackingService</code></td></tr>
+    <tr><td><code>AudioService.gs</code></td><td><code>BaseRepository</code>, <code>DocumentService</code>, <code>DriveService</code>, <code>ProjectService</code></td></tr>
+    <tr><td><code>CampaignProgrammingService.gs</code></td><td><code>CacheService</code>, <code>MailService</code></td></tr>
+    <tr><td><code>ConversionAgentService.gs</code></td><td><code>MailService</code></td></tr>
+    <tr><td><code>CustomerCategorizationService.gs</code></td><td><code>CustomerTransactionSourceService</code>, <code>MonthlyBalanceSyncService</code></td></tr>
+    <tr><td><code>DashboardService.gs</code></td><td><code>BaseRepository</code>, <code>FunnelService</code>, <code>HistoricalService</code>, <code>ProjectService</code></td></tr>
+    <tr><td><code>DatasetService.gs</code></td><td><code>BaseRepository</code></td></tr>
+    <tr><td><code>DepositChargeCorrelationService.gs</code></td><td><code>CustomerTransactionSourceService</code>, <code>PropertiesService</code></td></tr>
+    <tr><td><code>DepositChargeImportService.gs</code></td><td><code>AuthService</code>, <code>DepositChargeCorrelationService</code></td></tr>
+    <tr><td><code>DocumentService.gs</code></td><td><code>DriveService</code></td></tr>
+    <tr><td><code>FunnelService.gs</code></td><td><code>BaseRepository</code>, <code>MailService</code></td></tr>
+    <tr><td><code>HistoricalService.gs</code></td><td><code>BaseRepository</code>, <code>MailService</code></td></tr>
+    <tr><td><code>OutlookRealOpeningsService.gs</code></td><td><code>LockService</code></td></tr>
+    <tr><td><code>ProjectService.gs</code></td><td><code>AuthService</code>, <code>BaseRepository</code></td></tr>
+    <tr><td><code>PrototypeHeatmapService.gs</code></td><td><code>BaseRepository</code></td></tr>
+    <tr><td><code>RealtimeMonitoringService.gs</code></td><td><code>AnalyticsService</code>, <code>BaseRepository</code>, <code>LockService</code>, <code>MailService</code></td></tr>
+    <tr><td><code>TaskTrackingService.gs</code></td><td><code>AuthService</code>, <code>BaseRepository</code>, <code>MailService</code></td></tr>
+    <tr><td><code>TinchoService.gs</code></td><td><code>AuthService</code>, <code>BaseRepository</code>, <code>TaskTrackingService</code></td></tr>
+  </table>
+
+  <h3>5.3 Dependencias Service -> Integraciones / plataforma</h3>
+  <table>
+    <tr>
+      <th style="width: 32%;">Service</th>
+      <th style="width: 68%;">APIs / plataforma usadas</th>
+    </tr>
+    <tr><td><code>AccountsService.gs</code></td><td><code>SpreadsheetApp</code>, <code>DriveApp</code>, <code>UrlFetchApp</code>, <code>Utilities</code></td></tr>
+    <tr><td><code>AnalyticsService.gs</code></td><td><code>UrlFetchApp</code>, <code>ScriptApp</code></td></tr>
+    <tr><td><code>AudioService.gs</code></td><td><code>DriveApp</code>, <code>UrlFetchApp</code>, <code>ScriptApp</code>, <code>Utilities</code></td></tr>
+    <tr><td><code>CampaignProgrammingService.gs</code></td><td><code>SpreadsheetApp</code>, <code>Session</code>, <code>Utilities</code></td></tr>
+    <tr><td><code>ConversionAgentService.gs</code></td><td><code>SpreadsheetApp</code>, <code>Utilities</code></td></tr>
+    <tr><td><code>CustomerCategorizationService.gs</code></td><td><code>SpreadsheetApp</code>, <code>UrlFetchApp</code>, <code>ScriptApp</code>, <code>Utilities</code></td></tr>
+    <tr><td><code>CustomerTransactionSourceService.gs</code></td><td><code>SpreadsheetApp</code>, <code>DriveApp</code>, <code>UrlFetchApp</code>, <code>ScriptApp</code>, <code>Utilities</code></td></tr>
+    <tr><td><code>DepositChargeCorrelationService.gs</code></td><td><code>SpreadsheetApp</code>, <code>PropertiesService</code>, <code>Session</code>, <code>Utilities</code></td></tr>
+    <tr><td><code>DepositChargeDebugService.gs</code></td><td><code>SpreadsheetApp</code></td></tr>
+    <tr><td><code>DepositChargeImportService.gs</code></td><td><code>SpreadsheetApp</code>, <code>DriveApp</code>, <code>UrlFetchApp</code>, <code>ScriptApp</code>, <code>Session</code>, <code>Utilities</code></td></tr>
+    <tr><td><code>DocumentService.gs</code></td><td><code>DriveApp</code>, <code>DocumentApp</code></td></tr>
+    <tr><td><code>DriveService.gs</code></td><td><code>DriveApp</code>, <code>Utilities</code></td></tr>
+    <tr><td><code>MailService.gs</code></td><td><code>MailApp</code>, <code>UrlFetchApp</code></td></tr>
+    <tr><td><code>MonthlyBalanceSyncService.gs</code></td><td><code>SpreadsheetApp</code>, <code>DriveApp</code></td></tr>
+    <tr><td><code>OutlookRealOpeningsService.gs</code></td><td><code>SpreadsheetApp</code>, <code>ScriptApp</code>, <code>Session</code>, <code>Utilities</code></td></tr>
+    <tr><td><code>ProjectService.gs</code></td><td><code>SpreadsheetApp</code>, <code>Session</code>, <code>Utilities</code></td></tr>
+    <tr><td><code>PrototypeHeatmapService.gs</code></td><td><code>Session</code></td></tr>
+    <tr><td><code>RealtimeMonitoringService.gs</code></td><td><code>SpreadsheetApp</code>, <code>Session</code>, <code>Utilities</code></td></tr>
+    <tr><td><code>TinchoService.gs</code></td><td><code>UrlFetchApp</code>, <code>ScriptApp</code></td></tr>
+    <tr><td><code>WhatsAppAgentService.gs</code></td><td><code>SpreadsheetApp</code>, <code>UrlFetchApp</code></td></tr>
+    <tr><td><code>WhatsAppConversationalPocService.gs</code></td><td><code>SpreadsheetApp</code>, <code>UrlFetchApp</code></td></tr>
+  </table>
+
+  <h2>6. Entrypoints y jobs programados</h2>
+
+  <h3>6.1 Entrypoints principales</h3>
+  <table>
+    <tr>
+      <th style="width: 22%;">Archivo</th>
+      <th style="width: 28%;">Función</th>
+      <th style="width: 50%;">Rol</th>
+    </tr>
+    <tr>
+      <td><code>src/core/08_App.gs</code></td>
+      <td><code>doGet(e)</code></td>
+      <td>Entrega interfaz HTML y atiende acciones de mantenimiento autorizadas.</td>
+    </tr>
+    <tr>
+      <td><code>src/core/08_App.gs</code></td>
+      <td><code>doPost(e)</code></td>
+      <td>Recibe payloads del webhook, incluyendo flujo de WhatsApp y acciones automatizadas.</td>
+    </tr>
+    <tr>
+      <td><code>src/controllers/AppController.gs</code></td>
+      <td><code>invokeController(...)</code></td>
+      <td>Puerta de entrada general desde el frontend hacia los controladores del backend.</td>
+    </tr>
+  </table>
+
+  <h3>6.2 Triggers identificados en código</h3>
+  <table>
+    <tr>
+      <th style="width: 36%;">Trigger / handler</th>
+      <th style="width: 22%;">Frecuencia</th>
+      <th style="width: 42%;">Objetivo</th>
+    </tr>
+    <tr>
+      <td><code>runBirthdayCampaignDaily()</code></td>
+      <td>Diario 17:10</td>
+      <td>Ejecución de campaña de cumpleaños.</td>
+    </tr>
+    <tr>
+      <td><code>runCustomerTransactionDailyRefresh()</code></td>
+      <td>Diario 10:00</td>
+      <td>Refresco diario de universo transaccional.</td>
+    </tr>
+    <tr>
+      <td><code>runRealtimeMonitoringLiveSync()</code></td>
+      <td>Cada 1 minuto</td>
+      <td>Sincronización viva del buffer de monitoreo.</td>
+    </tr>
+    <tr>
+      <td><code>runRealtimeMonitoringCacheSync()</code></td>
+      <td>Cada 5 minutos</td>
+      <td>Consolidación de cache de monitoreo.</td>
+    </tr>
+    <tr>
+      <td><code>runRealtimeMonitoringAlertCheck()</code></td>
+      <td>Cada 5 minutos</td>
+      <td>Evaluación de anomalías y alertamiento.</td>
+    </tr>
+  </table>
+
+  <h2>7. Dependencias externas por dominio</h2>
+  <table>
+    <tr>
+      <th style="width: 22%;">Dominio</th>
+      <th style="width: 28%;">Tecnología / API</th>
+      <th style="width: 50%;">Uso dentro de Billú</th>
+    </tr>
+    <tr>
+      <td><strong>Frontend</strong></td>
+      <td>Apps Script HTML Service</td>
+      <td>Render del panel, navegación entre módulos, loaders, tablas y tabs.</td>
+    </tr>
+    <tr>
+      <td><strong>Persistencia</strong></td>
+      <td>Google Sheets</td>
+      <td>Fuente operativa principal, catálogos, bitácoras, campañas, PMO, clientes y tareas.</td>
+    </tr>
+    <tr>
+      <td><strong>Archivos</strong></td>
+      <td>Google Drive / Google Docs</td>
+      <td>Exportables, resguardo de cargas, archivos de audio y minutas generadas.</td>
+    </tr>
+    <tr>
+      <td><strong>Mensajería</strong></td>
+      <td>MailApp / correo</td>
+      <td>Recordatorios, alertas, campañas y notificaciones operativas.</td>
+    </tr>
+    <tr>
+      <td><strong>Analítica</strong></td>
+      <td>GA4 / Google Analytics</td>
+      <td>Funnel, snapshot y monitoreo operativo de enrolamiento.</td>
+    </tr>
+    <tr>
+      <td><strong>Canal externo</strong></td>
+      <td>Meta / WhatsApp Cloud API</td>
+      <td>Webhook, campañas outbound, respuestas automáticas y handoff a humano.</td>
+    </tr>
+    <tr>
+      <td><strong>IA</strong></td>
+      <td>OpenAI</td>
+      <td>Visión para lectura de pantallas, clasificación, prompts, audio y asistentes.</td>
+    </tr>
+    <tr>
+      <td><strong>Orquestación</strong></td>
+      <td>ScriptApp triggers</td>
+      <td>Automatización temporal y refresco programado de procesos.</td>
+    </tr>
+    <tr>
+      <td><strong>Evolución backend</strong></td>
+      <td>Node.js + TypeScript + Express</td>
+      <td>Objetivo institucional para el agente de WhatsApp con validación robusta y observabilidad.</td>
+    </tr>
+  </table>
+
+  <h2>8. Riesgos y observaciones de diseño</h2>
+  <ul>
+    <li>La solución gana velocidad por vivir sobre Google Sheets, pero hereda límites de concurrencia, consistencia y gobierno de cambios estructurales.</li>
+    <li>La capa de servicios está bien separada, lo cual facilita migraciones graduales hacia backend dedicado o base de datos institucional.</li>
+    <li>El uso de <code>BaseRepository</code> como acceso genérico ayuda a estandarizar operaciones, pero centraliza mucho comportamiento crítico en una sola abstracción.</li>
+    <li>El agente de WhatsApp ya tiene dos arquitecturas coexistiendo: Apps Script como PoC funcional rápida y Node como arquitectura objetivo más segura.</li>
+    <li>Los jobs críticos siguen dependiendo de triggers de Apps Script; institucionalmente conviene migrar los más sensibles a un scheduler administrado y auditable.</li>
+    <li>La relación entre dashboards ejecutivos, campañas y motores de tarea ya forma una base real de torre de control operativa, no solo un tablero visual.</li>
+  </ul>
+
+  <h2>9. Recomendación de uso del documento</h2>
+  <p>Este entregable puede usarse como base para:</p>
+  <ul>
+    <li>presentación de arquitectura ante dirección o tecnología,</li>
+    <li>onboarding técnico de nuevos desarrolladores,</li>
+    <li>mesa de institucionalización, seguridad y continuidad,</li>
+    <li>definición de roadmap de migración Apps Script -> backend institucional,</li>
+    <li>levantamiento de componentes y dependencias para soporte formal.</li>
+  </ul>
+
+  <p class="small"><strong>Nota:</strong> Este documento fue construido a partir del repositorio técnico y refleja la arquitectura observada en código y documentación al corte indicado. Si quieres, el siguiente paso natural es generar una segunda versión “ejecutiva” con menos detalle técnico y más foco en procesos, responsables y riesgos.</p>
+</body>
+</html>
