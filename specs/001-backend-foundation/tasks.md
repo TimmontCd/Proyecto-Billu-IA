@@ -34,10 +34,10 @@ funcionales.
 
 **Purpose**: Project initialization and baseline structure for the institutional backend
 
-- [ ] T001 Create Maven multi-module parent and child module descriptors in `backend/pom.xml`, `backend/foundation-domain/pom.xml`, `backend/foundation-application/pom.xml`, `backend/foundation-infrastructure-oracle/pom.xml`, `backend/foundation-infrastructure-mock/pom.xml`, `backend/foundation-infrastructure-legacy/pom.xml`, `backend/foundation-infrastructure-secrets/pom.xml`, `backend/foundation-web/pom.xml`, and `backend/foundation-ear/pom.xml`
-- [ ] T002 Create Java 8 source/resource skeleton for all backend modules under `backend/foundation-domain/src/main/java/com/billu/foundation/`, `backend/foundation-application/src/main/java/com/billu/foundation/`, `backend/foundation-infrastructure-oracle/src/main/java/com/billu/foundation/`, `backend/foundation-infrastructure-mock/src/main/java/com/billu/foundation/`, `backend/foundation-infrastructure-legacy/src/main/java/com/billu/foundation/`, `backend/foundation-infrastructure-secrets/src/main/java/com/billu/foundation/`, and `backend/foundation-web/src/main/java/com/billu/foundation/`
-- [ ] T003 [P] Create baseline local scheduler and environment config files in `backend/config/schedulers/local-schedulers.json`, `backend/foundation-web/src/main/resources/application-local-mock.properties`, `backend/foundation-web/src/main/resources/application-local-oracle.properties`, `backend/foundation-web/src/main/resources/application-dev.properties`, and `backend/foundation-web/src/main/resources/application-qa.properties`
-- [ ] T004 [P] Create automated test scaffolding in `tests/contract/`, `tests/integration/`, `tests/unit/`, and `backend/foundation-web/src/test/resources/`
+- [X] T001 Create Maven multi-module parent and child module descriptors in `backend/pom.xml`, `backend/foundation-domain/pom.xml`, `backend/foundation-application/pom.xml`, `backend/foundation-infrastructure-oracle/pom.xml`, `backend/foundation-infrastructure-mock/pom.xml`, `backend/foundation-infrastructure-legacy/pom.xml`, `backend/foundation-infrastructure-secrets/pom.xml`, `backend/foundation-web/pom.xml`, and `backend/foundation-ear/pom.xml`
+- [X] T002 Create Java 8 source/resource skeleton for all backend modules under `backend/foundation-domain/src/main/java/com/billu/foundation/`, `backend/foundation-application/src/main/java/com/billu/foundation/`, `backend/foundation-infrastructure-oracle/src/main/java/com/billu/foundation/`, `backend/foundation-infrastructure-mock/src/main/java/com/billu/foundation/`, `backend/foundation-infrastructure-legacy/src/main/java/com/billu/foundation/`, `backend/foundation-infrastructure-secrets/src/main/java/com/billu/foundation/`, and `backend/foundation-web/src/main/java/com/billu/foundation/`
+- [X] T003 [P] Create baseline local scheduler and environment config files in `backend/config/schedulers/local-schedulers.json`, `backend/foundation-web/src/main/resources/application-local-mock.properties`, `backend/foundation-web/src/main/resources/application-local-oracle.properties`, `backend/foundation-web/src/main/resources/application-dev.properties`, and `backend/foundation-web/src/main/resources/application-qa.properties`
+- [X] T004 [P] Create automated test scaffolding in `tests/contract/`, `tests/integration/`, `tests/unit/`, and `backend/foundation-web/src/test/resources/`
 
 ---
 
@@ -47,17 +47,17 @@ funcionales.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Implement core platform domain models in `backend/foundation-domain/src/main/java/com/billu/foundation/domain/EnvironmentProfile.java`, `LegacyDependency.java`, `AccessContext.java`, `JobDefinition.java`, `JobExecution.java`, `AuditEvent.java`, `MockDataset.java`, and `SchedulerCatalog.java`
-- [ ] T006 [P] Implement platform use-case interfaces and DTOs in `backend/foundation-application/src/main/java/com/billu/foundation/application/health/`, `readiness/`, `dependencies/`, `auth/`, `jobs/`, `datasets/`, and `transition/`
-- [ ] T007 [P] Implement environment/profile bootstrap and configuration resolution in `backend/foundation-web/src/main/java/com/billu/foundation/web/config/BootstrapConfig.java`, `EnvironmentProfileResolver.java`, and `backend/foundation-web/src/main/resources/application.properties`
-- [ ] T008 [P] Implement secret provider abstraction, local secret provider, and CyberArk adapter boundary in `backend/foundation-infrastructure-secrets/src/main/java/com/billu/foundation/infrastructure/secrets/SecretProvider.java`, `LocalSecretProvider.java`, and `CyberArkSecretProvider.java`
-- [ ] T009 [P] Implement scheduler catalog parser and job registry in `backend/foundation-application/src/main/java/com/billu/foundation/application/jobs/SchedulerCatalogLoader.java`, `JobRegistry.java`, and `backend/config/schedulers/local-schedulers.json`
-- [ ] T010 [P] Implement correlation, structured logging, and audit publishing baseline in `backend/foundation-web/src/main/java/com/billu/foundation/web/filters/CorrelationFilter.java`, `backend/foundation-application/src/main/java/com/billu/foundation/application/observability/AuditPublisher.java`, and `backend/foundation-web/src/main/resources/logback.xml`
-- [ ] T011 [P] Implement Oracle connectivity baseline and readiness probe in `backend/foundation-infrastructure-oracle/src/main/java/com/billu/foundation/infrastructure/oracle/OracleConnectionFactory.java` and `OracleReadinessProbe.java`
-- [ ] T012 [P] Implement mock dataset bootstrap repository in `backend/foundation-infrastructure-mock/src/main/java/com/billu/foundation/infrastructure/mock/MockDatasetRepository.java`, `MockDatasetLoader.java`, and `backend/foundation-web/src/test/resources/mock-datasets/bootstrap.json`
-- [ ] T013 [P] Implement legacy dependency inventory and read-only adapter shell in `backend/foundation-infrastructure-legacy/src/main/java/com/billu/foundation/infrastructure/legacy/LegacyDependencyCatalog.java`, `LegacyReadOnlyAdapter.java`, and `LegacyWriteBlockGuard.java`
-- [ ] T014 Configure WebSphere 9 compatible WAR/EAR packaging in `backend/foundation-web/pom.xml`, `backend/foundation-ear/pom.xml`, and `backend/foundation-ear/src/main/application/META-INF/application.xml`
-- [ ] T015 Implement shared exception mapping and API response envelope in `backend/foundation-web/src/main/java/com/billu/foundation/web/errors/GlobalExceptionMapper.java` and `backend/foundation-web/src/main/java/com/billu/foundation/web/api/ApiEnvelope.java`
+- [X] T005 Implement core platform domain models in `backend/foundation-domain/src/main/java/com/billu/foundation/domain/EnvironmentProfile.java`, `LegacyDependency.java`, `AccessContext.java`, `JobDefinition.java`, `JobExecution.java`, `AuditEvent.java`, `MockDataset.java`, and `SchedulerCatalog.java`
+- [X] T006 [P] Implement platform use-case interfaces and DTOs in `backend/foundation-application/src/main/java/com/billu/foundation/application/health/`, `readiness/`, `dependencies/`, `auth/`, `jobs/`, `datasets/`, and `transition/`
+- [X] T007 [P] Implement environment/profile bootstrap and configuration resolution in `backend/foundation-web/src/main/java/com/billu/foundation/web/config/BootstrapConfig.java`, `EnvironmentProfileResolver.java`, and `backend/foundation-web/src/main/resources/application.properties`
+- [X] T008 [P] Implement secret provider abstraction, local secret provider, and CyberArk adapter boundary in `backend/foundation-infrastructure-secrets/src/main/java/com/billu/foundation/infrastructure/secrets/SecretProvider.java`, `LocalSecretProvider.java`, and `CyberArkSecretProvider.java`
+- [X] T009 [P] Implement scheduler catalog parser and job registry in `backend/foundation-application/src/main/java/com/billu/foundation/application/jobs/SchedulerCatalogLoader.java`, `JobRegistry.java`, and `backend/config/schedulers/local-schedulers.json`
+- [X] T010 [P] Implement correlation, structured logging, and audit publishing baseline in `backend/foundation-web/src/main/java/com/billu/foundation/web/filters/CorrelationFilter.java`, `backend/foundation-application/src/main/java/com/billu/foundation/application/observability/AuditPublisher.java`, and `backend/foundation-web/src/main/resources/logback.xml`
+- [X] T011 [P] Implement Oracle connectivity baseline and readiness probe in `backend/foundation-infrastructure-oracle/src/main/java/com/billu/foundation/infrastructure/oracle/OracleConnectionFactory.java` and `OracleReadinessProbe.java`
+- [X] T012 [P] Implement mock dataset bootstrap repository in `backend/foundation-infrastructure-mock/src/main/java/com/billu/foundation/infrastructure/mock/MockDatasetRepository.java`, `MockDatasetLoader.java`, and `backend/foundation-web/src/test/resources/mock-datasets/bootstrap.json`
+- [X] T013 [P] Implement legacy dependency inventory and read-only adapter shell in `backend/foundation-infrastructure-legacy/src/main/java/com/billu/foundation/infrastructure/legacy/LegacyDependencyCatalog.java`, `LegacyReadOnlyAdapter.java`, and `LegacyWriteBlockGuard.java`
+- [X] T014 Configure WebSphere 9 compatible WAR/EAR packaging in `backend/foundation-web/pom.xml`, `backend/foundation-ear/pom.xml`, and `backend/foundation-ear/src/main/application/META-INF/application.xml`
+- [X] T015 Implement shared exception mapping and API response envelope in `backend/foundation-web/src/main/java/com/billu/foundation/web/errors/GlobalExceptionMapper.java` and `backend/foundation-web/src/main/java/com/billu/foundation/web/api/ApiEnvelope.java`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -71,18 +71,18 @@ funcionales.
 
 ### Tests for User Story 1 ⚠️
 
-- [ ] T016 [P] [US1] Create contract tests for `/internal/platform/health`, `/internal/platform/readiness`, and `/internal/platform/dependencies` in `tests/contract/platform_health_contract_test.java`
-- [ ] T017 [P] [US1] Create contract tests for `/internal/platform/auth/context` and `/internal/platform/mock-datasets/{datasetKey}/load` in `tests/contract/platform_local_contract_test.java`
-- [ ] T018 [P] [US1] Create local-mock integration smoke flow in `tests/integration/local_mock_smoke_test.java`
-- [ ] T019 [P] [US1] Create local-oracle integration smoke flow and degraded-readiness coverage in `tests/integration/local_oracle_smoke_test.java`
+- [X] T016 [P] [US1] Create contract tests for `/internal/platform/health`, `/internal/platform/readiness`, and `/internal/platform/dependencies` in `tests/contract/platform_health_contract_test.java`
+- [X] T017 [P] [US1] Create contract tests for `/internal/platform/auth/context` and `/internal/platform/mock-datasets/{datasetKey}/load` in `tests/contract/platform_local_contract_test.java`
+- [X] T018 [P] [US1] Create local-mock integration smoke flow in `tests/integration/local_mock_smoke_test.java`
+- [X] T019 [P] [US1] Create local-oracle integration smoke flow and degraded-readiness coverage in `tests/integration/local_oracle_smoke_test.java`
 
 ### Implementation for User Story 1
 
-- [ ] T020 [US1] Implement health, readiness, and dependency controllers in `backend/foundation-web/src/main/java/com/billu/foundation/web/api/PlatformHealthController.java` and `PlatformReadinessController.java`
-- [ ] T021 [US1] Implement auth context and mock dataset controllers in `backend/foundation-web/src/main/java/com/billu/foundation/web/api/PlatformAuthController.java` and `PlatformMockDatasetController.java`
-- [ ] T022 [US1] Implement local validation orchestration for `local-mock` and `local-oracle` in `backend/foundation-application/src/main/java/com/billu/foundation/application/validation/LocalValidationService.java`
-- [ ] T023 [US1] Wire environment-specific profile switching and dataset bootstrap in `backend/foundation-web/src/main/java/com/billu/foundation/web/config/ProfileSwitchConfig.java`, `backend/foundation-web/src/main/resources/application-local-mock.properties`, and `backend/foundation-web/src/main/resources/application-local-oracle.properties`
-- [ ] T024 [US1] Update developer run commands and smoke criteria in `specs/001-backend-foundation/quickstart.md` to match implemented local startup behavior
+- [X] T020 [US1] Implement health, readiness, and dependency controllers in `backend/foundation-web/src/main/java/com/billu/foundation/web/api/PlatformHealthController.java` and `PlatformReadinessController.java`
+- [X] T021 [US1] Implement auth context and mock dataset controllers in `backend/foundation-web/src/main/java/com/billu/foundation/web/api/PlatformAuthController.java` and `PlatformMockDatasetController.java`
+- [X] T022 [US1] Implement local validation orchestration for `local-mock` and `local-oracle` in `backend/foundation-application/src/main/java/com/billu/foundation/application/validation/LocalValidationService.java`
+- [X] T023 [US1] Wire environment-specific profile switching and dataset bootstrap in `backend/foundation-web/src/main/java/com/billu/foundation/web/config/ProfileSwitchConfig.java`, `backend/foundation-web/src/main/resources/application-local-mock.properties`, and `backend/foundation-web/src/main/resources/application-local-oracle.properties`
+- [X] T024 [US1] Update developer run commands and smoke criteria in `specs/001-backend-foundation/quickstart.md` to match implemented local startup behavior
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 

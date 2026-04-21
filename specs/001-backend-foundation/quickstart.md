@@ -47,26 +47,37 @@ mvn -f backend/pom.xml clean verify -P local-mock
 ### Run
 
 ```bash
-mvn -f backend/pom.xml -pl foundation-web -am -P local-mock jetty:run
+mvn -f backend/pom.xml -pl foundation-web -am -P local-mock \
+  -Dbillu.environment=local-mock \
+  -DskipTests \
+  package
 ```
+
+Despliegue local esperado:
+
+- publicar `backend/foundation-web/target/foundation-web-0.1.0-SNAPSHOT.war` en un
+  contenedor servlet/Jakarta EE compatible con Servlet 3.1;
+- o desplegar el `EAR` generado en un WebSphere 9 local/compartido de validacion.
 
 ### Smoke checks
 
 ```bash
 curl -s http://localhost:8080/internal/platform/health
 curl -s http://localhost:8080/internal/platform/readiness
+curl -s http://localhost:8080/internal/platform/dependencies
 curl -s http://localhost:8080/internal/platform/auth/context
 curl -s -X POST http://localhost:8080/internal/platform/mock-datasets/bootstrap/load
-curl -s -X POST http://localhost:8080/internal/platform/jobs/platform-smoke/executions
 ```
 
 ### Expected result
 
 - El servicio arranca en Mac sin Oracle.
+- El perfil activo queda resuelto como `local-mock` via `-Dbillu.environment`
+  o `BILLU_ENV`.
 - Se puede cargar un dataset mockeado controlado.
-- El catalogo local de schedulers se valida desde JSON antes de habilitar jobs.
-- Los endpoints internos de plataforma responden con datos trazables.
-- La ejecucion del job smoke deja evidencia de logs y auditoria.
+- El endpoint de readiness responde `READY`.
+- Los endpoints internos de plataforma responden con `correlationId` y el mismo
+  contrato tanto en smoke manual como en pruebas.
 
 ## 2. Validacion local con Oracle
 
@@ -97,8 +108,17 @@ mvn -f backend/pom.xml clean verify -P local-oracle
 ### Run
 
 ```bash
-mvn -f backend/pom.xml -pl foundation-web -am -P local-oracle jetty:run
+mvn -f backend/pom.xml -pl foundation-web -am -P local-oracle \
+  -Dbillu.environment=local-oracle \
+  -DskipTests \
+  package
 ```
+
+Despliegue local esperado:
+
+- publicar `backend/foundation-web/target/foundation-web-0.1.0-SNAPSHOT.war` en un
+  contenedor local compatible;
+- usar el mismo `WAR` dentro del `EAR` para validacion institucional posterior.
 
 ### Smoke checks
 
@@ -106,13 +126,15 @@ mvn -f backend/pom.xml -pl foundation-web -am -P local-oracle jetty:run
 curl -s http://localhost:8080/internal/platform/health
 curl -s http://localhost:8080/internal/platform/readiness
 curl -s http://localhost:8080/internal/platform/dependencies
-curl -s -X POST http://localhost:8080/internal/platform/jobs/platform-smoke/executions
+curl -s http://localhost:8080/internal/platform/auth/context
 ```
 
 ### Expected result
 
 - El backend valida conectividad a Oracle.
 - La respuesta de readiness distingue dependencias listas y no listas.
+- Si Oracle no esta disponible, readiness responde `DEGRADED` y el contrato HTTP
+  se mantiene estable.
 - Los contratos siguen siendo los mismos que en `local-mock`.
 - El proveedor de secretos puede seguir siendo local mientras la integracion con
   CyberArk aun no este habilitada.

@@ -1,0 +1,16 @@
+{
+  "catalogVersion": "1.0.0",
+  "environmentKey": "local-mock",
+  "jobs": [
+    {
+      "jobKey": "platform-smoke",
+      "jobName": "Platform Smoke Validation",
+      "triggerMode": "MANUAL",
+      "executionMode": "BOTH",
+      "idempotencyKeyStrategy": "environment+jobKey+day",
+      "owner": "backend-foundation",
+      "auditRequired": true,
+      "status": "ACTIVE"
+    }
+  ]
+}
