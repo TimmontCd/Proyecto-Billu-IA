@@ -14,3 +14,9 @@ build/
 .m2/
 *.tmp
 *.swp
+.clasp.json
+dist/
+whatsapp-agent-node/.env
+whatsapp-agent-node/dist/
+whatsapp-agent-node/node_modules/
+whatsapp-agent-node/*.log
