@@ -1,0 +1,13 @@
+{
+  "datasetKey": "bootstrap",
+  "version": "1.0.0",
+  "supportedContracts": [
+    "/internal/platform/health",
+    "/internal/platform/readiness",
+    "/internal/platform/auth/context"
+  ],
+  "sourceFormat": "JSON",
+  "owner": "backend-foundation",
+  "consistencyLevel": "SMOKE",
+  "status": "REGISTERED"
+}

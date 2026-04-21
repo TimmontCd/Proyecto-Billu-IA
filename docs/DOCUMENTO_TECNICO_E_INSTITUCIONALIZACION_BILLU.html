@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Documento Tecnico e Institucionalizacion de Billu</title>
+<style>
+body { font-family: "Aptos", "Helvetica Neue", Arial, sans-serif; color:#1f2937; margin: 38px 44px; line-height: 1.45; }
+h1 { font-size: 24pt; color:#0f172a; margin-bottom: 14px; }
+h2 { font-size: 16pt; color:#0f172a; margin-top: 24px; margin-bottom: 8px; border-bottom: 1px solid #d1d5db; padding-bottom: 4px; }
+h3 { font-size: 12pt; color:#111827; margin-top: 18px; margin-bottom: 6px; }
+p { margin: 0 0 10px 0; }
+ul, ol { margin: 0 0 10px 22px; }
+li { margin: 0 0 4px 0; }
+code { font-family: "Menlo", "Consolas", monospace; background:#f3f4f6; padding:1px 4px; border-radius:4px; }
+table { width: 100%; border-collapse: collapse; margin: 10px 0 14px 0; font-size: 10pt; }
+th, td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: left; vertical-align: top; }
+th { background: #e2e8f0; }
+.meta { color:#475569; margin-bottom: 16px; }
+</style>
+</head><body>
+<h1>Documento Tecnico e Institucionalizacion de Billu</h1>
+<p>Version del documento: 1.0 Fecha de corte: 27 de marzo de 2026 Base analizada: repositorio tecnico, manifiesto de Apps Script, manual operativo y artefactos de carga disponibles en este proyecto.</p>
+<h2>1. Proposito</h2>
+<p>Este documento resume, en lenguaje tecnico pero entendible para direccion, que se construyo en el proyecto Billu, como esta armado, que capacidades ya estan operando, que componentes siguen parciales o reservados, y que se requiere para institucionalizar la solucion dentro de la operacion formal del banco.</p>
+<h2>2. Resumen ejecutivo</h2>
+<p>Billu evoluciono de un MVP de &quot;Control Tower Directiva&quot; a una plataforma operativa interna montada en Google Apps Script, con interfaz web, almacenamiento principal en Google Sheets, integracion con Google Drive y consumo de APIs de Google para analitica, transcripcion y voz.</p>
+<p>La solucion ya contiene capacidades funcionales reales para:</p>
+<ul>
+<li>monitoreo en tiempo real del enrolamiento Billu N2 y N4,</li>
+<li>resumen ejecutivo de cuentas y productos,</li>
+<li>analisis de apertura y uso durante los primeros 30 dias,</li>
+<li>categorizacion automatica de clientes y exportacion de segmentos,</li>
+<li>seguimiento de proyectos y actividades del equipo,</li>
+<li>recordatorios por correo,</li>
+<li>asistente operativo &quot;Preguntale al Che&quot; para gestionar tareas,</li>
+<li>carga historica de saldos y ventas,</li>
+<li>generacion de minutas a partir de audio.</li>
+</ul>
+<p>Al mismo tiempo, el repositorio muestra que algunos modulos visibles en la interfaz siguen reservados o en desarrollo, y que la institucionalizacion requiere fortalecer seguridad, gobierno de datos, administracion de configuracion, ambientes, continuidad operativa y control de cambios.</p>
+<h2>3. Alcance implementado</h2>
+<h3>3.1 Capacidades implementadas</h3>
+<ol>
+<li>Monitoreo de enrolamiento en tiempo real.</li>
+<li>Resumen ejecutivo de cuentas, productos y plasticos.</li>
+<li>Cohortes de apertura y uso &quot;First 30&quot;.</li>
+<li>Correlacion de depositos y cargos con vista por cliente.</li>
+<li>Categorizacion automatica de clientes y venta cruzada.</li>
+<li>Seguimiento de proyectos, tareas y avances.</li>
+<li>Seguimiento de actividades del equipo con recordatorios.</li>
+<li>Asistente de lenguaje natural orientado a tareas.</li>
+<li>Carga y analisis de historicos de saldos y ventas.</li>
+<li>Carga de audio y generacion automatica de minutas.</li>
+<li>Bootstrap tecnico para hojas, carpetas y plantillas.</li>
+<li>Alertamiento operativo basico.</li>
+</ol>
+<h3>3.2 Capacidades parciales o reservadas</h3>
+<p>Los siguientes componentes existen en la interfaz, pero el propio codigo los marca como reservados, pendientes o en desarrollo:</p>
+<ul>
+<li>Agente de Conversion.</li>
+<li>Agente de Whatsapp.</li>
+<li>Programacion de Campanas.</li>
+<li>Ordenes de Servicio e Incidencias.</li>
+<li>Mapas de calor.</li>
+</ul>
+<p>Adicionalmente, &quot;Preguntale al Che&quot; ya no opera con manuales ni base de conocimiento documental en esta etapa; en el backend esta en modo <code>TASK_ONLY</code>, es decir, enfocado unicamente en tareas del tablero operativo.</p>
+<h3>3.3 Alineacion con el manual operativo existente</h3>
+<p>El manual operativo revisado muestra que el proceso Billu ya venia requiriendo formalmente:</p>
+<ul>
+<li>disponibilidad de informacion operativa,</li>
+<li>control sobre aperturas y enrolamiento,</li>
+<li>soporte a procesos de cash back,</li>
+<li>resguardo y seguimiento de actividades.</li>
+</ul>
+<p>La plataforma desarrollada si cubre la capa de visibilidad, consolidacion y seguimiento de informacion para esos procesos. Sin embargo, no se observo en el codigo una automatizacion completa del abono contable final de cash back; por lo tanto, la presentacion ante direccion debe posicionar correctamente que la solucion institucionaliza principalmente la capa de control, monitoreo, seguimiento y analitica operativa.</p>
+<h2>4. Arquitectura de la solucion</h2>
+<h3>4.1 Arquitectura logica</h3>
+<p>La solucion esta construida sobre Google Apps Script como Web App, con una arquitectura por capas:</p>
+<ul>
+<li><code>core</code>: configuracion, autenticacion, utilerias, bootstrap, ejecuciones programadas y manifest.</li>
+<li><code>controllers</code>: punto de entrada para cada modulo funcional.</li>
+<li><code>services</code>: logica de negocio, integraciones y transformaciones.</li>
+<li><code>repositories</code>: acceso generico a datos sobre Google Sheets.</li>
+<li><code>views</code>: interfaz HTML/CSS/JavaScript renderizada con <code>HtmlService</code>.</li>
+<li><code>dist</code>: salida preparada para despliegue en Apps Script.</li>
+</ul>
+<h3>4.2 Patron de operacion</h3>
+<ol>
+<li>El usuario entra a la Web App.</li>
+<li><code>doGet</code> entrega la interfaz HTML.</li>
+<li>El frontend llama controladores de Apps Script.</li>
+<li>Los controladores delegan a servicios.</li>
+<li>Los servicios leen o escriben en Google Sheets, Drive o APIs externas.</li>
+<li>Los resultados regresan al frontend como <code>ApiResponse</code>.</li>
+</ol>
+<h3>4.3 Repositorio y persistencia</h3>
+<p>La persistencia principal vive en Google Sheets. El repositorio generico <code>BaseRepository</code> normaliza encabezados, crea hojas faltantes y ejecuta operaciones CRUD basicas.</p>
+<p>Ventajas:</p>
+<ul>
+<li>bajo tiempo de salida a produccion,</li>
+<li>facilidad de administracion para negocio,</li>
+<li>trazabilidad visible para equipos no tecnicos.</li>
+</ul>
+<p>Limitaciones:</p>
+<ul>
+<li>escalabilidad y concurrencia acotadas,</li>
+<li>mayor dependencia de formatos manuales,</li>
+<li>control de integridad mas debil que una base transaccional,</li>
+<li>mas riesgo ante cambios manuales de columnas o encabezados.</li>
+</ul>
+<h2>5. Componentes construidos</h2>
+<h3>5.1 Nucleo tecnico</h3>
+<p>El nucleo contiene catalogos, constantes, configuracion por <code>Script Properties</code>, autenticacion por correo, control de roles, normalizacion de respuestas y bitacora de auditoria.</p>
+<p>Elementos relevantes:</p>
+<ul>
+<li>nombre tecnico base: <code>Control Tower Directiva</code>,</li>
+<li>version del codigo: <code>0.7.3</code>,</li>
+<li>zona horaria: <code>America/Monterrey</code>,</li>
+<li>roles: <code>ADMIN</code> y <code>OPERATOR</code>,</li>
+<li>bitacora de auditoria en hoja <code>Bitacora</code>.</li>
+</ul>
+<h3>5.2 Monitoreo en tiempo real</h3>
+<p>El modulo de tiempo real combina dos fuentes:</p>
+<ul>
+<li>eventos operativos en tiempo real consultados desde GA4,</li>
+<li>ingestiones via webhook desde Outlook para aperturas reales.</li>
+</ul>
+<p>Funciones principales:</p>
+<ul>
+<li>sincronizacion de buffer cada 1 minuto,</li>
+<li>consolidacion cada 5 minutos,</li>
+<li>alertamiento por ausencia de finalizaciones de enrolamiento,</li>
+<li>evaluacion diferenciada entre horario pico y fuera de horario,</li>
+<li>reparacion de duplicados y reconstruccion de cache.</li>
+</ul>
+<p>Cobertura funcional:</p>
+<ul>
+<li>flujo Billu N2,</li>
+<li>flujo Billu Premium N4,</li>
+<li>semaforizacion de salud del proceso,</li>
+<li>correo de alerta cuando se detecta posible interrupcion.</li>
+</ul>
+<h3>5.3 Resumen de cuentas y productos</h3>
+<p>Este modulo usa como fuente principal la hoja <code>Clientes</code> y construye:</p>
+<ul>
+<li>total de cuentas,</li>
+<li>saldo total,</li>
+<li>activas e inactivas,</li>
+<li>desglose por producto,</li>
+<li>resumen de plasticos,</li>
+<li>distribucion por estado,</li>
+<li>historico de aperturas,</li>
+<li>analisis de cohortes <code>First 30</code>.</li>
+</ul>
+<p>Productos reconocidos:</p>
+<ul>
+<li>cuenta nivel 2,</li>
+<li>cuenta nivel 4,</li>
+<li>ahorro programado,</li>
+<li>inversion diaria,</li>
+<li>tarjeta de credito.</li>
+</ul>
+<h3>5.4 Correlacion de depositos y cargos</h3>
+<p>Existe un modulo tecnico de vista ejecutiva para correlacionar:</p>
+<ul>
+<li>universo de clientes,</li>
+<li>transacciones enero-marzo 2026,</li>
+<li>comportamiento durante los primeros 30 dias,</li>
+<li>perfil por ID cliente,</li>
+<li>estado,</li>
+<li>producto,</li>
+<li>saldos promedio y puntuales.</li>
+</ul>
+<p>El modulo puede:</p>
+<ul>
+<li>reconstruir su cache desde fuentes,</li>
+<li>exportar cohortes,</li>
+<li>consultar un cliente puntual,</li>
+<li>producir vistas ejecutivas de uso temprano.</li>
+</ul>
+<p>Nota importante: este modulo existe como vista y servicio, pero no esta expuesto en el menu principal activo de la aplicacion.</p>
+<h3>5.5 Categorizacion automatica de clientes</h3>
+<p>La categorizacion ya implementa reglas de negocio para clasificar clientes en tres niveles:</p>
+<ol>
+<li>Exploradores.</li>
+<li>Constructores.</li>
+<li>Aliados Premium.</li>
+</ol>
+<p>Variables consideradas:</p>
+<ul>
+<li>saldo promedio de 3 meses,</li>
+<li>cantidad de transacciones,</li>
+<li>antiguedad,</li>
+<li>productos activos,</li>
+<li>productos faltantes,</li>
+<li>perfil transaccional,</li>
+<li>oportunidad de venta cruzada.</li>
+</ul>
+<p>Salidas del modulo:</p>
+<ul>
+<li>KPIs ejecutivos,</li>
+<li>resumen por segmento,</li>
+<li>exportacion CSV por nivel,</li>
+<li>exportacion CSV de venta cruzada,</li>
+<li>consulta puntual por ID recompensas,</li>
+<li>tarjeta sugerida y campana sugerida.</li>
+</ul>
+<h3>5.6 Proyectos y PMO</h3>
+<p>El modulo de proyectos permite:</p>
+<ul>
+<li>alta y actualizacion de proyectos,</li>
+<li>tareas por proyecto,</li>
+<li>registro de avances,</li>
+<li>resumen de portafolio,</li>
+<li>semaforo de riesgo,</li>
+<li>consulta de detalle del proyecto.</li>
+</ul>
+<p>Reglas destacadas:</p>
+<ul>
+<li>recalculo automatico del avance del proyecto segun el promedio de tareas,</li>
+<li>semaforo basado en riesgo, bloqueo, fecha compromiso y avance,</li>
+<li>visibilidad por responsable y usuarios autorizados.</li>
+</ul>
+<h3>5.7 Seguimiento de actividades del equipo</h3>
+<p>Este es uno de los modulos mas maduros para operacion interna. Permite:</p>
+<ul>
+<li>alta, edicion y cierre de actividades,</li>
+<li>responsables autenticados,</li>
+<li>prioridad y fechas limite,</li>
+<li>tablero por usuario,</li>
+<li>actividad reciente,</li>
+<li>recordatorios por vencer o vencidas,</li>
+<li>auditoria de cambios.</li>
+</ul>
+<p>El modulo puede operar incluso sobre un spreadsheet dedicado distinto al maestro, lo que facilita aislar la gestion diaria del equipo.</p>
+<h3>5.8 Asistente operativo &quot;Preguntale al Che&quot;</h3>
+<p>El asistente ya esta orientado al tablero de actividades. Sus capacidades actuales son:</p>
+<ul>
+<li>consultar pendientes,</li>
+<li>resumir carga de trabajo,</li>
+<li>crear actividades,</li>
+<li>actualizar estatus,</li>
+<li>registrar feedback,</li>
+<li>sintetizar voz con Google TTS.</li>
+</ul>
+<p>Estado funcional real:</p>
+<ul>
+<li>si opera como asistente de tareas,</li>
+<li>si guarda historial de consultas y feedback,</li>
+<li>no opera actualmente como motor documental basado en manuales,</li>
+<li>no tiene Dialogflow habilitado en la configuracion observada.</li>
+</ul>
+<h3>5.9 Historico de saldos y ventas</h3>
+<p>Este modulo permite importar registros historicos y generar:</p>
+<ul>
+<li>resumen diario,</li>
+<li>resumen por hora,</li>
+<li>variacion diaria,</li>
+<li>promedio movil 7 y 30 dias,</li>
+<li>alertas por desviacion historica.</li>
+</ul>
+<p>Se utiliza hashing por registro para evitar duplicados en la carga.</p>
+<h3>5.10 Audio y minutas</h3>
+<p>La plataforma incluye:</p>
+<ul>
+<li>carga de archivos de audio a Drive,</li>
+<li>transcripcion con Google Speech-to-Text cuando esta habilitado,</li>
+<li>extraccion automatica de resumen, acuerdos, tareas y riesgos,</li>
+<li>generacion de minuta en Google Docs,</li>
+<li>creacion opcional de tareas derivadas de la minuta.</li>
+</ul>
+<h3>5.11 Administracion y bootstrap</h3>
+<p>El bootstrap crea o normaliza:</p>
+<ul>
+<li>hojas del modelo de datos,</li>
+<li>carpetas en Drive,</li>
+<li>plantillas de documentos,</li>
+<li>catalogos base,</li>
+<li>roles,</li>
+<li>usuario administrador inicial,</li>
+<li>tokens operativos.</li>
+</ul>
+<p>Tambien existen checks administrativos para ejecutar alertas y revisiones operativas.</p>
+<h2>6. Modelo de datos operativo</h2>
+<p>El modelo de datos principal esta definido sobre hojas de Google Sheets. Las mas relevantes son:</p>
+<table>
+<thead><tr><th>Hoja</th><th>Proposito</th></tr></thead><tbody>
+<tr><td><code>Usuarios</code></td><td>control de acceso y perfiles</td></tr>
+<tr><td><code>Roles</code></td><td>definicion de permisos</td></tr>
+<tr><td><code>Proyectos</code></td><td>portafolio de iniciativas</td></tr>
+<tr><td><code>Tareas</code></td><td>tareas ligadas a proyectos</td></tr>
+<tr><td><code>SeguimientoActividades</code></td><td>tablero diario del equipo</td></tr>
+<tr><td><code>Avances</code></td><td>evidencias y progreso</td></tr>
+<tr><td><code>Incidencias</code></td><td>incidencias de proyectos</td></tr>
+<tr><td><code>Alertas</code></td><td>alertamiento operativo</td></tr>
+<tr><td><code>Documentos</code></td><td>referencias a documentos generados</td></tr>
+<tr><td><code>Audios</code></td><td>archivos y estado de transcripcion</td></tr>
+<tr><td><code>Minutas</code></td><td>minutas derivadas de audio</td></tr>
+<tr><td><code>AnalisisFuncionales</code></td><td>analisis funcionales generados</td></tr>
+<tr><td><code>AnaliticaDataset</code> y <code>AnaliticaDatasetRows</code></td><td>datasets cargados</td></tr>
+<tr><td><code>DepositosCargos*</code></td><td>capas operativas y cache de depositos/cargos</td></tr>
+<tr><td><code>SaldosVentasHistorico</code></td><td>historico de saldos y ventas</td></tr>
+<tr><td><code>CargasHistoricas</code></td><td>control de cargas historicas</td></tr>
+<tr><td><code>Tincho*</code></td><td>consultas, feedback y escalaciones del asistente</td></tr>
+<tr><td><code>Bitacora</code></td><td>auditoria de acciones</td></tr>
+</tbody></table>
+<h2>7. Fuentes de datos e integraciones</h2>
+<h3>7.1 Fuentes principales observadas en configuracion</h3>
+<ul>
+<li>spreadsheet maestro Billu,</li>
+<li>spreadsheet de saldos de cliente,</li>
+<li>spreadsheet de categorizacion / saldos mensuales,</li>
+<li>spreadsheets mensuales de transacciones enero, febrero y marzo 2026,</li>
+<li>folder raiz en Google Drive,</li>
+<li>propiedad GA4 para analitica.</li>
+</ul>
+<h3>7.2 Integraciones externas</h3>
+<ul>
+<li>Google Analytics Data API,</li>
+<li>Google Speech-to-Text,</li>
+<li>Google Text-to-Speech,</li>
+<li>Google Drive API para conversion de archivos a Google Sheets,</li>
+<li>Google Docs para plantillas y minutas,</li>
+<li>Outlook via webhook para aperturas reales.</li>
+</ul>
+<h3>7.3 Script Properties relevantes</h3>
+<p>La operacion depende de propiedades como:</p>
+<ul>
+<li>dominios permitidos,</li>
+<li>IDs de spreadsheets y carpetas,</li>
+<li>property ID de GA4,</li>
+<li>correos de alertas,</li>
+<li>configuracion de transcripcion,</li>
+<li>configuracion del asistente,</li>
+<li>tokens de integracion operativa.</li>
+</ul>
+<h2>8. Operacion y automatizacion</h2>
+<h3>8.1 Jobs y ejecuciones programadas</h3>
+<p>Se identificaron dos grupos principales de automatizacion:</p>
+<ol>
+<li>Refresco diario de fuentes transaccionales.</li>
+</ol>
+<ul>
+<li>horario observado: diario a las 10:00.</li>
+<li>acciones: sincroniza saldos mensuales, relee fuentes transaccionales, recalcula depositos/cargos y refresca cohortes First 30.</li>
+</ul>
+<ol>
+<li>Monitoreo en tiempo real.</li>
+</ol>
+<ul>
+<li>sincronizacion live: cada 1 minuto.</li>
+<li>consolidacion de cache: cada 5 minutos.</li>
+<li>chequeo de alertas: cada 5 minutos.</li>
+</ul>
+<h3>8.2 Mantenimiento por endpoint</h3>
+<p>La Web App tambien expone acciones tecnicas para:</p>
+<ul>
+<li>configurar spreadsheet de seguimiento,</li>
+<li>instalar trigger de refresco diario,</li>
+<li>correr refresco diario en demanda,</li>
+<li>correr sincronizacion mensual,</li>
+<li>formatear columnas monetarias,</li>
+<li>registrar usuarios operativos.</li>
+</ul>
+<h2>9. Seguridad, control y cumplimiento</h2>
+<h3>9.1 Controles ya presentes</h3>
+<ul>
+<li>autenticacion por correo del usuario activo de Google,</li>
+<li>control por rol <code>ADMIN</code> y <code>OPERATOR</code>,</li>
+<li>allowlist de correos externos,</li>
+<li>bitacora de auditoria por alta y cambio,</li>
+<li>campos sensibles bloqueados para analitica,</li>
+<li>tokens para acciones de mantenimiento,</li>
+<li>scopes explicitos en <code>appsscript.json</code>.</li>
+</ul>
+<h3>9.2 Riesgos y observaciones de seguridad</h3>
+<ol>
+<li>La Web App esta configurada con acceso <code>ANYONE</code>.</li>
+</ol>
+<ul>
+<li>Aunque el frontend valida usuario al entrar, para institucionalizacion se recomienda validar si este nivel de exposicion es aceptable o si debe limitarse al dominio corporativo.</li>
+</ul>
+<ol>
+<li>Existen tokens y valores sensibles hardcodeados en codigo.</li>
+</ol>
+<ul>
+<li>Para institucionalizacion deben moverse a <code>Script Properties</code> o a un esquema formal de secretos.</li>
+</ul>
+<ol>
+<li>Hay correos personales en defaults y allowlists.</li>
+</ol>
+<ul>
+<li>Deben sustituirse por cuentas institucionales o listas administradas formalmente.</li>
+</ul>
+<ol>
+<li>El almacenamiento en hojas permite cambios manuales.</li>
+</ol>
+<ul>
+<li>Se requieren controles de acceso, propietarios formales y respaldo.</li>
+</ul>
+<h2>10. Hallazgos tecnicos para presentar con transparencia</h2>
+<h3>10.1 Fortalezas</h3>
+<ul>
+<li>la solucion ya resuelve problemas operativos reales,</li>
+<li>el time to market fue corto por apoyarse en Google Workspace,</li>
+<li>la interfaz ya unifica varios tableros antes dispersos,</li>
+<li>existe audit trail,</li>
+<li>existen automatizaciones programadas,</li>
+<li>hay una base clara para estandarizar operacion.</li>
+</ul>
+<h3>10.2 Deuda tecnica y pendientes</h3>
+<ol>
+<li>Hay modulos visibles que todavia son placeholders.</li>
+<li>No se observaron pruebas automatizadas ni pipeline formal de despliegue.</li>
+<li>La configuracion esta dispersa entre codigo y <code>Script Properties</code>.</li>
+<li>La persistencia en Sheets es util para MVP, pero limitada para escalamiento.</li>
+<li>El repositorio contiene artefactos de compilacion repetidos (<code>dist</code>, <code>dist 2</code>, <code>dist 3</code>, etc.), lo cual debe ordenarse.</li>
+<li>Parte de la documentacion funcional existente requiere alineacion temporal.</li>
+</ol>
+<h3>10.3 Observacion documental relevante</h3>
+<p>El archivo <code>Manual para la Operacion y Administracion de Billu</code> indica version <code>1.3</code> y &quot;Ultima Modificacion: Junio 2026&quot;. Dado que la fecha de corte de este documento es 27 de marzo de 2026, esa marca temporal debe validarse antes de usar el manual como evidencia oficial en comites o direccion.</p>
+<h2>11. Propuesta de institucionalizacion</h2>
+<h3>11.1 Gobierno</h3>
+<p>Se recomienda formalizar la solucion con los siguientes duenos:</p>
+<ul>
+<li>dueno de negocio: Direccion de Innovacion Digital,</li>
+<li>dueno funcional: lider operativo del proceso Billu,</li>
+<li>dueno tecnico: celula de automatizacion / data / desarrollo,</li>
+<li>dueno de datos: area responsable de las fuentes oficiales,</li>
+<li>dueno de seguridad: arquitectura y seguridad de la informacion.</li>
+</ul>
+<h3>11.2 Ambientes</h3>
+<p>Crear y separar al menos tres ambientes:</p>
+<ol>
+<li>Desarrollo.</li>
+<li>UAT o certificacion.</li>
+<li>Produccion.</li>
+</ol>
+<p>Cada ambiente debe tener:</p>
+<ul>
+<li>proyecto Apps Script independiente,</li>
+<li>spreadsheets y carpetas independientes,</li>
+<li>propiedades y tokens propios,</li>
+<li>lista de usuarios autorizados propia.</li>
+</ul>
+<h3>11.3 Seguridad y cumplimiento</h3>
+<p>Acciones recomendadas:</p>
+<ol>
+<li>mover todos los tokens hardcodeados a propiedades seguras,</li>
+<li>restringir acceso de la Web App al dominio corporativo si el caso de uso lo permite,</li>
+<li>eliminar correos personales de configuracion por default,</li>
+<li>documentar matriz de accesos y segregacion de funciones,</li>
+<li>revisar scopes OAuth con seguridad.</li>
+</ol>
+<h3>11.4 Gobierno de datos</h3>
+<p>Formalizar:</p>
+<ul>
+<li>catalogo de fuentes oficiales,</li>
+<li>dueno por spreadsheet,</li>
+<li>diccionario de datos por hoja critica,</li>
+<li>reglas de calidad para encabezados y formatos,</li>
+<li>calendario de actualizacion por fuente,</li>
+<li>SLA de disponibilidad y tiempos de refresco.</li>
+</ul>
+<h3>11.5 Operacion y soporte</h3>
+<p>Definir un modelo operativo con:</p>
+<ul>
+<li>mesa de soporte de primer nivel,</li>
+<li>responsable de monitoreo diario,</li>
+<li>procedimiento de atencion de incidentes,</li>
+<li>procedimiento de rollback funcional,</li>
+<li>procedimiento de alta y baja de usuarios,</li>
+<li>procedimiento de rotacion de tokens,</li>
+<li>respaldo de plantillas, hojas y configuracion.</li>
+</ul>
+<h3>11.6 Desarrollo y despliegue</h3>
+<p>Se recomienda institucionalizar el ciclo de vida asi:</p>
+<ol>
+<li>desarrollo en rama controlada,</li>
+<li>build de <code>dist</code> limpio y unico,</li>
+<li>validacion en ambiente UAT,</li>
+<li>aprobacion funcional,</li>
+<li>despliegue a produccion,</li>
+<li>registro de version y fecha de liberacion.</li>
+</ol>
+<h3>11.7 Documentacion minima obligatoria</h3>
+<p>Para convertirlo en capacidad institucional se recomienda mantener:</p>
+<ul>
+<li>documento tecnico maestro,</li>
+<li>documento funcional por modulo,</li>
+<li>matriz de fuentes y responsables,</li>
+<li>SOP de operacion diaria,</li>
+<li>manual de administracion,</li>
+<li>manual de soporte,</li>
+<li>bitacora de cambios y versiones.</li>
+</ul>
+<h2>12. Roadmap sugerido de institucionalizacion</h2>
+<h3>0 a 30 dias</h3>
+<ul>
+<li>congelar alcance de lo ya operativo,</li>
+<li>limpiar configuraciones hardcodeadas,</li>
+<li>formalizar propietarios,</li>
+<li>separar DEV y PROD,</li>
+<li>depurar artefactos del repositorio,</li>
+<li>cerrar documento tecnico y SOP base.</li>
+</ul>
+<h3>31 a 60 dias</h3>
+<ul>
+<li>endurecer seguridad de acceso,</li>
+<li>implementar proceso formal de despliegue,</li>
+<li>crear matriz de datos y controles,</li>
+<li>estabilizar monitoreo y alertas,</li>
+<li>habilitar tablero de soporte operativo.</li>
+</ul>
+<h3>61 a 90 dias</h3>
+<ul>
+<li>evaluar migracion de tablas criticas a una base mas robusta si el volumen lo exige,</li>
+<li>definir continuidad operativa y respaldo,</li>
+<li>medir adopcion, uso y tiempos de respuesta,</li>
+<li>decidir que modulos reservados pasan a fase 2 y cuales se retiran del menu.</li>
+</ul>
+<h2>13. Recomendacion para presentacion ante direccion</h2>
+<p>El mensaje recomendado es:</p>
+<ul>
+<li>Billu ya cuenta con una plataforma interna funcional que integra monitoreo, analitica operativa y gestion del trabajo.</li>
+<li>La solucion ya genera valor real en seguimiento y control.</li>
+<li>El siguiente paso no es &quot;hacer otro sistema&quot;, sino institucionalizar lo construido.</li>
+<li>Institucionalizar implica gobierno, seguridad, ambientes, soporte, documentacion y control de cambios.</li>
+</ul>
+<h2>14. Evidencia tecnica base revisada</h2>
+<p>Artefactos principales utilizados para este levantamiento:</p>
+<ul>
+<li><code>README.md</code></li>
+<li><code>appsscript.json</code></li>
+<li><code>src/core/*</code></li>
+<li><code>src/controllers/*</code></li>
+<li><code>src/services/*</code></li>
+<li><code>src/repositories/BaseRepository.gs</code></li>
+<li><code>src/views/index.html</code></li>
+<li><code>src/views/partials/scripts.html</code></li>
+<li><code>Manual para la Operacion y Administracion de Billu.txt</code></li>
+</ul>
+<h2>15. Conclusion</h2>
+<p>Billu ya no debe presentarse como un experimento aislado. Tecnica y funcionalmente ya existe una plataforma operativa con componentes productivos claros. Lo que corresponde ahora es cerrar brechas de institucionalizacion para convertirla en una capacidad formal, segura, trazable y sostenible dentro del banco.</p>
+</body></html>

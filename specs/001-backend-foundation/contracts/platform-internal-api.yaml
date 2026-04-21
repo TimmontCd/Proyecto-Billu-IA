@@ -1,0 +1,289 @@
+openapi: 3.0.3
+info:
+  title: Billu Backend Foundation Internal API
+  version: 0.1.0
+  description: >
+    Contrato interno de la fundacion del backend institucional. Sirve para
+    validar arranque, readiness, autenticacion desacoplada, carga de datasets
+    mockeados y ejecucion base de jobs. No expone modulos de negocio ni el
+    dominio de WhatsApp.
+servers:
+  - url: http://localhost:8080
+    description: Local development
+paths:
+  /internal/platform/health:
+    get:
+      summary: Healthcheck base de la plataforma
+      operationId: getPlatformHealth
+      responses:
+        '200':
+          description: Plataforma operativa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /internal/platform/readiness:
+    get:
+      summary: Readiness de dependencias de plataforma
+      operationId: getPlatformReadiness
+      responses:
+        '200':
+          description: Dependencias listas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadinessResponse'
+        '503':
+          description: Al menos una dependencia requerida no esta lista
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadinessResponse'
+  /internal/platform/dependencies:
+    get:
+      summary: Inventario de dependencias y adaptadores activos
+      operationId: listPlatformDependencies
+      responses:
+        '200':
+          description: Dependencias conocidas por la fundacion
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dependencies:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DependencySummary'
+  /internal/platform/auth/context:
+    get:
+      summary: Contexto de acceso efectivo para la solicitud actual
+      operationId: getAccessContext
+      responses:
+        '200':
+          description: Contexto de acceso resuelto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessContextResponse'
+  /internal/platform/jobs/{jobKey}/executions:
+    post:
+      summary: Ejecuta manualmente un job de plataforma
+      operationId: runPlatformJob
+      parameters:
+        - name: jobKey
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobExecutionRequest'
+      responses:
+        '202':
+          description: Ejecucion aceptada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobExecutionResponse'
+        '404':
+          description: Job no registrado
+  /internal/platform/jobs/{jobKey}/executions/{executionId}:
+    get:
+      summary: Consulta el resultado de una ejecucion de job
+      operationId: getPlatformJobExecution
+      parameters:
+        - name: jobKey
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: executionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Estado de ejecucion encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobExecutionResponse'
+        '404':
+          description: Ejecucion no encontrada
+  /internal/platform/mock-datasets/{datasetKey}/load:
+    post:
+      summary: Carga un dataset mockeado controlado para validacion local
+      operationId: loadMockDataset
+      parameters:
+        - name: datasetKey
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MockDatasetLoadRequest'
+      responses:
+        '202':
+          description: Dataset cargado o programado para carga
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MockDatasetLoadResponse'
+        '400':
+          description: Modo actual no permite datasets mockeados
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - service
+        - environment
+        - timestamp
+      properties:
+        status:
+          type: string
+          enum: [UP]
+        service:
+          type: string
+        environment:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        version:
+          type: string
+        correlationId:
+          type: string
+    ReadinessResponse:
+      type: object
+      required:
+        - status
+        - environment
+        - checks
+      properties:
+        status:
+          type: string
+          enum: [READY, DEGRADED, NOT_READY]
+        environment:
+          type: string
+        checks:
+          type: array
+          items:
+            $ref: '#/components/schemas/DependencySummary'
+    DependencySummary:
+      type: object
+      required:
+        - dependencyKey
+        - dependencyType
+        - status
+      properties:
+        dependencyKey:
+          type: string
+        dependencyType:
+          type: string
+        status:
+          type: string
+          enum: [READY, DEGRADED, NOT_READY, BRIDGED]
+        mode:
+          type: string
+        details:
+          type: string
+    AccessContextResponse:
+      type: object
+      required:
+        - subjectId
+        - principalName
+        - authSource
+        - roles
+        - environment
+      properties:
+        subjectId:
+          type: string
+        principalName:
+          type: string
+        authSource:
+          type: string
+          enum: [LOCAL_MOCK, LEGACY_BRIDGE, CORPORATE_IDP]
+        roles:
+          type: array
+          items:
+            type: string
+        scopes:
+          type: array
+          items:
+            type: string
+        environment:
+          type: string
+        correlationId:
+          type: string
+    JobExecutionRequest:
+      type: object
+      properties:
+        requestedMode:
+          type: string
+          enum: [MOCK, ORACLE]
+        dryRun:
+          type: boolean
+          default: false
+        requestedBy:
+          type: string
+    JobExecutionResponse:
+      type: object
+      required:
+        - executionId
+        - jobKey
+        - outcome
+        - environment
+        - correlationId
+      properties:
+        executionId:
+          type: string
+        jobKey:
+          type: string
+        outcome:
+          type: string
+          enum: [PENDING, RUNNING, SUCCEEDED, FAILED, CANCELLED]
+        environment:
+          type: string
+        runMode:
+          type: string
+        correlationId:
+          type: string
+        summary:
+          type: string
+    MockDatasetLoadRequest:
+      type: object
+      properties:
+        version:
+          type: string
+        resetBeforeLoad:
+          type: boolean
+          default: false
+    MockDatasetLoadResponse:
+      type: object
+      required:
+        - datasetKey
+        - status
+        - environment
+      properties:
+        datasetKey:
+          type: string
+        status:
+          type: string
+          enum: [REGISTERED, LOADED, STALE]
+        environment:
+          type: string
+        version:
+          type: string
+        correlationId:
+          type: string
