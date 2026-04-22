@@ -1,6 +1,6 @@
 package com.billu.foundation.web.api;
 
-import com.billu.foundation.application.validation.LocalValidationService;
+import com.billu.foundation.application.auth.AccessContextQueryUseCase;
 import com.billu.foundation.domain.AccessContext;
 import com.billu.foundation.web.setup.PlatformComponentFactory;
 import javax.servlet.http.HttpServletRequest;
@@ -10,22 +10,22 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-@Path("/internal/platform/auth/context")
+@Path("/platform/auth/context")
 @Produces(MediaType.APPLICATION_JSON)
 public class PlatformAuthController {
-  private final LocalValidationService localValidationService;
+  private final AccessContextQueryUseCase accessContextQueryUseCase;
 
   public PlatformAuthController() {
-    this(PlatformComponentFactory.getLocalValidationService());
+    this(PlatformComponentFactory.getAccessContextService());
   }
 
-  public PlatformAuthController(LocalValidationService localValidationService) {
-    this.localValidationService = localValidationService;
+  public PlatformAuthController(AccessContextQueryUseCase accessContextQueryUseCase) {
+    this.accessContextQueryUseCase = accessContextQueryUseCase;
   }
 
   @GET
   public AccessContextResponse getAccessContext(@Context HttpServletRequest request) {
-    AccessContext accessContext = localValidationService.getAccessContext();
+    AccessContext accessContext = accessContextQueryUseCase.getAccessContext();
     return new AccessContextResponse(
         accessContext.getSubjectId(),
         accessContext.getPrincipalName(),

@@ -1,0 +1,22 @@
+{
+  "environment": "local-mock",
+  "filters": {
+    "startDate": "2026-01-01",
+    "endDate": "2026-03-31",
+    "selectedYear": 2026,
+    "selectedMonth": 3
+  },
+  "trend": {
+    "totalAccounts": 95,
+    "averagePerDay": 1.2,
+    "peak": "2026-02"
+  },
+  "monthlySummary": {
+    "year": 2026,
+    "month": 3,
+    "totalAccounts": 34,
+    "activeAccounts": 27,
+    "inactiveAccounts": 5,
+    "cancelledAccounts": 2
+  }
+}

@@ -1,0 +1,39 @@
+openapi: 3.0.3
+info:
+  title: Billu Customer Categorization Internal API
+  version: 0.1.0
+paths:
+  /internal/customer-categorization/dashboard:
+    get:
+      summary: Obtiene el dashboard ejecutivo de categorizacion
+      operationId: getCustomerCategorizationDashboard
+      responses:
+        '200':
+          description: Dashboard generado
+  /internal/customer-categorization/rewards/{rewardsId}:
+    get:
+      summary: Consulta detalle por ID RECOMPENSAS
+      operationId: findCustomerCategorizationByRewardsId
+      parameters:
+        - name: rewardsId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Resultado encontrado
+  /internal/customer-categorization/exports/segment:
+    post:
+      summary: Genera exportable por segmento
+      operationId: exportCustomerCategorizationSegment
+      responses:
+        '202':
+          description: Exportable generado
+  /internal/customer-categorization/exports/cross-sell:
+    post:
+      summary: Genera exportable de venta cruzada por segmento
+      operationId: exportCustomerCategorizationCrossSell
+      responses:
+        '202':
+          description: Exportable generado

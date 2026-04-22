@@ -1,0 +1,42 @@
+{
+  "summaryId": "customer-summary-overview-mock",
+  "environment": "local-mock",
+  "totalAccounts": 120,
+  "totalBalance": 3456789.25,
+  "activeAccounts": 96,
+  "inactiveAccounts": 24,
+  "executiveSummary": "Resumen ejecutivo mock del slice Resumen de Clientes.",
+  "sourceMode": "LOCAL_MOCK",
+  "kpis": {
+    "total_accounts": 120.0,
+    "total_balance": 3456789.25,
+    "active_accounts": 96.0,
+    "inactive_accounts": 24.0
+  },
+  "productSummary": [
+    {
+      "productKey": "CUENTA_N2",
+      "productLabel": "Cuenta Billu N2",
+      "accounts": 56,
+      "sharePct": 46.7,
+      "totalBalance": 1245000.00,
+      "status": "ACTIVE"
+    },
+    {
+      "productKey": "CUENTA_N4",
+      "productLabel": "Cuenta Billu Premium N4",
+      "accounts": 34,
+      "sharePct": 28.3,
+      "totalBalance": 1678000.00,
+      "status": "ACTIVE"
+    },
+    {
+      "productKey": "TARJETA_CREDITO",
+      "productLabel": "Tarjeta de credito",
+      "accounts": 12,
+      "sharePct": 10.0,
+      "totalBalance": 0.0,
+      "status": "ACTIVE"
+    }
+  ]
+}

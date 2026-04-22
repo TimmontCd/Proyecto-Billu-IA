@@ -16,6 +16,16 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+  <filter>
+    <filter-name>accessContextFilter</filter-name>
+    <filter-class>com.billu.foundation.web.security.AccessContextFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>accessContextFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
   <servlet>
     <servlet-name>jersey-servlet</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
@@ -28,6 +38,6 @@
 
   <servlet-mapping>
     <servlet-name>jersey-servlet</servlet-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/internal/*</url-pattern>
   </servlet-mapping>
 </web-app>

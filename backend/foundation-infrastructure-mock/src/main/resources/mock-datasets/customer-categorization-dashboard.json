@@ -1,0 +1,101 @@
+{
+  "dashboardId": "customer-categorization-dashboard-mock",
+  "environment": "local-mock",
+  "sourceMode": "LOCAL_MOCK",
+  "executiveSummary": "Se analizaron 120 clientes activos. Constructores es el segmento con mayor volumen y sigue existiendo oportunidad clara de tarjeta de credito.",
+  "kpis": {
+    "total_clients": 120,
+    "total_balance": 3456789.25,
+    "average_balance": 28806.58,
+    "average_abonos": 3.2,
+    "average_cargos": 4.1,
+    "explorers_clients": 28,
+    "constructors_clients": 64,
+    "premium_allies_clients": 28,
+    "credit_card_opportunity_clients": 39,
+    "portfolio_complete_clients": 34
+  },
+  "segmentSummary": [
+    {
+      "segmentId": "Exploradores",
+      "segmentLabel": "Exploradores",
+      "rule": "saldo promedio 3 meses < 500, o hasta 2 transacciones, o antiguedad menor a 90 dias",
+      "recommendedCard": "Tarjeta Billu Inicio",
+      "recommendedCardBenefits": "Linea inicial y requisitos ligeros.",
+      "clients": 28,
+      "sharePct": 23.3,
+      "totalBalance": 154000.0,
+      "averageBalance": 5500.0,
+      "averageTransactions": 1.8,
+      "averageTenureDays": 42.0,
+      "missingCreditCardClients": 24,
+      "portfolioCompleteClients": 2,
+      "topStates": [
+        { "stateName": "Nuevo Leon", "clients": 9 },
+        { "stateName": "CDMX", "clients": 7 }
+      ],
+      "productAdoption": [
+        { "code": "CUENTA_N2", "clients": 25 },
+        { "code": "TARJETA_CREDITO", "clients": 4 }
+      ],
+      "missingProducts": [
+        { "code": "TARJETA_CREDITO", "clients": 24 },
+        { "code": "INVERSION_DIARIA", "clients": 18 }
+      ]
+    },
+    {
+      "segmentId": "Constructores",
+      "segmentLabel": "Constructores",
+      "rule": "saldo promedio 3 meses entre 500 y 5000, con 3 a 9 transacciones y relacion activa estable",
+      "recommendedCard": "Tarjeta Billu Crece",
+      "recommendedCardBenefits": "Linea media, recompensas por uso y aceleradores por dispersion y ahorro.",
+      "clients": 64,
+      "sharePct": 53.3,
+      "totalBalance": 1215000.0,
+      "averageBalance": 18984.38,
+      "averageTransactions": 5.6,
+      "averageTenureDays": 161.0,
+      "missingCreditCardClients": 13,
+      "portfolioCompleteClients": 18,
+      "topStates": [
+        { "stateName": "Nuevo Leon", "clients": 18 },
+        { "stateName": "Jalisco", "clients": 13 }
+      ],
+      "productAdoption": [
+        { "code": "CUENTA_N2", "clients": 51 },
+        { "code": "AHORRO_PROGRAMADO", "clients": 27 }
+      ],
+      "missingProducts": [
+        { "code": "TARJETA_CREDITO", "clients": 13 },
+        { "code": "INVERSION_DIARIA", "clients": 21 }
+      ]
+    },
+    {
+      "segmentId": "Aliados_Premium",
+      "segmentLabel": "Aliados Premium",
+      "rule": "saldo promedio 3 meses > 5000, o saldo >= 2000 con 10+ transacciones y antiguedad >= 180 dias",
+      "recommendedCard": "Tarjeta Billu Aliados Premium",
+      "recommendedCardBenefits": "Linea alta, recompensas superiores y tasas preferenciales.",
+      "clients": 28,
+      "sharePct": 23.3,
+      "totalBalance": 2087789.25,
+      "averageBalance": 74563.9,
+      "averageTransactions": 12.8,
+      "averageTenureDays": 294.0,
+      "missingCreditCardClients": 2,
+      "portfolioCompleteClients": 14,
+      "topStates": [
+        { "stateName": "CDMX", "clients": 10 },
+        { "stateName": "Nuevo Leon", "clients": 8 }
+      ],
+      "productAdoption": [
+        { "code": "CUENTA_N4", "clients": 20 },
+        { "code": "TARJETA_CREDITO", "clients": 26 }
+      ],
+      "missingProducts": [
+        { "code": "AHORRO_PROGRAMADO", "clients": 7 },
+        { "code": "INVERSION_DIARIA", "clients": 5 }
+      ]
+    }
+  ]
+}

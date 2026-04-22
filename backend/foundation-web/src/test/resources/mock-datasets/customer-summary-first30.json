@@ -1,0 +1,32 @@
+{
+  "environment": "local-mock",
+  "referenceDate": "2026-03-31",
+  "totalSummary": {
+    "openingAccounts": 95,
+    "qualifiedAccounts": 48,
+    "transactionalAccounts": 52
+  },
+  "monthlySummary": [
+    {
+      "year": 2026,
+      "month": 1,
+      "openingAccounts": 32,
+      "qualifiedAccounts": 18,
+      "transactionalAccounts": 20
+    },
+    {
+      "year": 2026,
+      "month": 2,
+      "openingAccounts": 29,
+      "qualifiedAccounts": 15,
+      "transactionalAccounts": 17
+    },
+    {
+      "year": 2026,
+      "month": 3,
+      "openingAccounts": 34,
+      "qualifiedAccounts": 15,
+      "transactionalAccounts": 15
+    }
+  ]
+}

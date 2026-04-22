@@ -1,0 +1,23 @@
+{
+  "environment": "local-mock",
+  "rewardsId": "ABC123",
+  "totalMatches": 1,
+  "executiveSummary": "Se encontro 1 registro para el ID RECOMPENSAS consultado.",
+  "rows": [
+    {
+      "idRecompensas": "ABC123",
+      "nivelClienteId": "Constructores",
+      "nivelCliente": "Constructores",
+      "reglaNivel": "saldo promedio 3 meses entre 500 y 5000, con 3 a 9 transacciones y relacion activa estable",
+      "tarjetaSugerida": "Tarjeta Billu Crece",
+      "saldoPromedioHoy": 8450.23,
+      "saldoPromedio3Meses": 9134.55,
+      "transaccionesTotales": 7,
+      "perfilTransaccional": "Uso medio",
+      "antiguedadDias": 188,
+      "productosActivos": "Cuenta Billu N2, Ahorro Programado",
+      "productosFaltantes": "Tarjeta de credito, Inversion diaria",
+      "campanaSugerida": "Oferta Tarjeta Billu Crece"
+    }
+  ]
+}

@@ -15,6 +15,11 @@
   <dependencies>
     <dependency>
       <groupId>com.billu</groupId>
+      <artifactId>foundation-application</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.billu</groupId>
       <artifactId>foundation-domain</artifactId>
       <version>${project.version}</version>
     </dependency>

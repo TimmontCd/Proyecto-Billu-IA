@@ -1,0 +1,10 @@
+{
+  "exportType": "CROSS_SELL_EXPORT",
+  "segmentId": "Constructores",
+  "segmentLabel": "Constructores",
+  "outcome": "SUCCEEDED",
+  "fileName": "venta_cruzada_constructores.csv",
+  "rowCount": 64,
+  "correlationId": "placeholder",
+  "summary": "Placeholder para exporte de venta cruzada."
+}

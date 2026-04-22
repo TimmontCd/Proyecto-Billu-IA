@@ -1,0 +1,10 @@
+{
+  "exportType": "SEGMENT_EXPORT",
+  "segmentId": "Constructores",
+  "segmentLabel": "Constructores",
+  "outcome": "SUCCEEDED",
+  "fileName": "categorizacion_cliente_constructores.csv",
+  "rowCount": 64,
+  "correlationId": "placeholder",
+  "summary": "Placeholder para exporte por segmento."
+}

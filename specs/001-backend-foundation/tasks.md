@@ -96,15 +96,15 @@ funcionales.
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T025 [P] [US2] Create coexistence policy integration test for legacy inventory and read-only enforcement in `tests/integration/legacy_bridge_policy_test.java`
-- [ ] T026 [P] [US2] Create transition fallback and rollback integration test in `tests/integration/transition_fallback_test.java`
+- [X] T025 [P] [US2] Create coexistence policy integration test for legacy inventory and read-only enforcement in `tests/integration/legacy_bridge_policy_test.java`
+- [X] T026 [P] [US2] Create transition fallback and rollback integration test in `tests/integration/transition_fallback_test.java`
 
 ### Implementation for User Story 2
 
-- [ ] T027 [US2] Implement legacy dependency inventory service and endpoint in `backend/foundation-application/src/main/java/com/billu/foundation/application/dependencies/LegacyDependencyService.java` and `backend/foundation-web/src/main/java/com/billu/foundation/web/api/LegacyDependencyController.java`
-- [ ] T028 [US2] Implement read-only legacy bridge adapters and write blocking guards in `backend/foundation-infrastructure-legacy/src/main/java/com/billu/foundation/infrastructure/legacy/SheetReadOnlyBridge.java`, `DriveReadOnlyBridge.java`, and `LegacyWriteBlockGuard.java`
-- [ ] T029 [US2] Implement transition status and rollback evidence service in `backend/foundation-application/src/main/java/com/billu/foundation/application/transition/TransitionStatusService.java` and `backend/foundation-web/src/main/java/com/billu/foundation/web/api/TransitionController.java`
-- [ ] T030 [US2] Document coexistence boundaries, retirement criteria, and rollback runbook in `specs/001-backend-foundation/quickstart.md` and `docs/backend-foundation-runbook.md`
+- [X] T027 [US2] Implement legacy dependency inventory service and endpoint in `backend/foundation-application/src/main/java/com/billu/foundation/application/dependencies/LegacyDependencyService.java` and `backend/foundation-web/src/main/java/com/billu/foundation/web/api/LegacyDependencyController.java`
+- [X] T028 [US2] Implement read-only legacy bridge adapters and write blocking guards in `backend/foundation-infrastructure-legacy/src/main/java/com/billu/foundation/infrastructure/legacy/SheetReadOnlyBridge.java`, `DriveReadOnlyBridge.java`, and `LegacyWriteBlockGuard.java`
+- [X] T029 [US2] Implement transition status and rollback evidence service in `backend/foundation-application/src/main/java/com/billu/foundation/application/transition/TransitionStatusService.java` and `backend/foundation-web/src/main/java/com/billu/foundation/web/api/TransitionController.java`
+- [X] T030 [US2] Document coexistence boundaries, retirement criteria, and rollback runbook in `specs/001-backend-foundation/quickstart.md` and `docs/backend-foundation-runbook.md`
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -118,18 +118,18 @@ funcionales.
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T031 [P] [US3] Create contract tests for `/internal/platform/jobs/{jobKey}/executions` and `/internal/platform/jobs/{jobKey}/executions/{executionId}` in `tests/contract/platform_jobs_contract_test.java`
-- [ ] T032 [P] [US3] Create integration test for audit/log correlation on job execution in `tests/integration/job_audit_trace_test.java`
-- [ ] T033 [P] [US3] Create integration test for local secret provider fallback with CyberArk disabled in `tests/integration/secrets_provider_fallback_test.java`
+- [X] T031 [P] [US3] Create contract tests for `/internal/platform/jobs/{jobKey}/executions` and `/internal/platform/jobs/{jobKey}/executions/{executionId}` in `tests/contract/platform_jobs_contract_test.java`
+- [X] T032 [P] [US3] Create integration test for audit/log correlation on job execution in `tests/integration/job_audit_trace_test.java`
+- [X] T033 [P] [US3] Create integration test for local secret provider fallback with CyberArk disabled in `tests/integration/secrets_provider_fallback_test.java`
 
 ### Implementation for User Story 3
 
-- [ ] T034 [US3] Implement job execution and query controllers in `backend/foundation-web/src/main/java/com/billu/foundation/web/api/PlatformJobController.java` and `backend/foundation-application/src/main/java/com/billu/foundation/application/jobs/JobExecutionService.java`
-- [ ] T035 [US3] Implement audit event persistence and structured operational logging in `backend/foundation-application/src/main/java/com/billu/foundation/application/observability/AuditTrailService.java`, `backend/foundation-infrastructure-oracle/src/main/java/com/billu/foundation/infrastructure/oracle/AuditEventRepository.java`, and `backend/foundation-web/src/main/resources/logback.xml`
-- [ ] T036 [US3] Implement effective access context resolution with local and future federated modes in `backend/foundation-application/src/main/java/com/billu/foundation/application/auth/AccessContextService.java` and `backend/foundation-web/src/main/java/com/billu/foundation/web/security/AccessContextFilter.java`
-- [ ] T037 [US3] Implement scheduler execution pipeline from `backend/config/schedulers/local-schedulers.json` to job runner in `backend/foundation-application/src/main/java/com/billu/foundation/application/jobs/JsonSchedulerExecutor.java`
-- [ ] T038 [US3] Implement secret resolution flow with local provider fallback and CyberArk integration boundary in `backend/foundation-infrastructure-secrets/src/main/java/com/billu/foundation/infrastructure/secrets/SecretResolutionService.java`
-- [ ] T039 [US3] Expose operational metrics and correlation fields across controllers and jobs in `backend/foundation-web/src/main/java/com/billu/foundation/web/metrics/PlatformMetricsPublisher.java`
+- [X] T034 [US3] Implement job execution and query controllers in `backend/foundation-web/src/main/java/com/billu/foundation/web/api/PlatformJobController.java` and `backend/foundation-application/src/main/java/com/billu/foundation/application/jobs/JobExecutionService.java`
+- [X] T035 [US3] Implement audit event persistence and structured operational logging in `backend/foundation-application/src/main/java/com/billu/foundation/application/observability/AuditTrailService.java`, `backend/foundation-infrastructure-oracle/src/main/java/com/billu/foundation/infrastructure/oracle/AuditEventRepository.java`, and `backend/foundation-web/src/main/resources/logback.xml`
+- [X] T036 [US3] Implement effective access context resolution with local and future federated modes in `backend/foundation-application/src/main/java/com/billu/foundation/application/auth/AccessContextService.java` and `backend/foundation-web/src/main/java/com/billu/foundation/web/security/AccessContextFilter.java`
+- [X] T037 [US3] Implement scheduler execution pipeline from `backend/config/schedulers/local-schedulers.json` to job runner in `backend/foundation-application/src/main/java/com/billu/foundation/application/jobs/JsonSchedulerExecutor.java`
+- [X] T038 [US3] Implement secret resolution flow with local provider fallback and CyberArk integration boundary in `backend/foundation-infrastructure-secrets/src/main/java/com/billu/foundation/infrastructure/secrets/SecretResolutionService.java`
+- [X] T039 [US3] Expose operational metrics and correlation fields across controllers and jobs in `backend/foundation-web/src/main/java/com/billu/foundation/web/metrics/PlatformMetricsPublisher.java`
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -139,11 +139,11 @@ funcionales.
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T040 [P] Create architecture and deployment notes for the foundation in `docs/backend-foundation-architecture.md`
-- [ ] T041 [P] Add WebSphere 9 EAR verification support in `backend/scripts/verify-ear.sh` and `tests/integration/websphere9_packaging_smoke_test.sh`
-- [ ] T042 Harden scheduler JSON and mock dataset validation rules in `backend/foundation-application/src/main/java/com/billu/foundation/application/jobs/SchedulerCatalogValidator.java` and `backend/foundation-application/src/main/java/com/billu/foundation/application/datasets/MockDatasetValidator.java`
-- [ ] T043 Run end-to-end quickstart validation and record final command set in `specs/001-backend-foundation/quickstart.md`
-- [ ] T044 [P] Update agent and traceability context in `AGENTS.md` and `docs/backend-foundation-runbook.md`
+- [X] T040 [P] Create architecture and deployment notes for the foundation in `docs/backend-foundation-architecture.md`
+- [X] T041 [P] Add WebSphere 9 EAR verification support in `backend/scripts/verify-ear.sh` and `tests/integration/websphere9_packaging_smoke_test.sh`
+- [X] T042 Harden scheduler JSON and mock dataset validation rules in `backend/foundation-application/src/main/java/com/billu/foundation/application/jobs/SchedulerCatalogValidator.java` and `backend/foundation-application/src/main/java/com/billu/foundation/application/datasets/MockDatasetValidator.java`
+- [X] T043 Run end-to-end quickstart validation and record final command set in `specs/001-backend-foundation/quickstart.md`
+- [X] T044 [P] Update agent and traceability context in `AGENTS.md` and `docs/backend-foundation-runbook.md`
 
 ---
 

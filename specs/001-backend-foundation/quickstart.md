@@ -44,6 +44,12 @@ backend/
 mvn -f backend/pom.xml clean verify -P local-mock
 ```
 
+Comando validado en esta iteracion para compilacion de foundation:
+
+```bash
+mvn -f backend/pom.xml -DskipTests package
+```
+
 ### Run
 
 ```bash
@@ -65,8 +71,11 @@ Despliegue local esperado:
 curl -s http://localhost:8080/internal/platform/health
 curl -s http://localhost:8080/internal/platform/readiness
 curl -s http://localhost:8080/internal/platform/dependencies
+curl -s http://localhost:8080/internal/platform/dependencies/legacy
+curl -s http://localhost:8080/internal/platform/transition
 curl -s http://localhost:8080/internal/platform/auth/context
 curl -s -X POST http://localhost:8080/internal/platform/mock-datasets/bootstrap/load
+curl -s -X POST http://localhost:8080/internal/platform/jobs/platform-smoke/executions
 ```
 
 ### Expected result
@@ -126,7 +135,10 @@ Despliegue local esperado:
 curl -s http://localhost:8080/internal/platform/health
 curl -s http://localhost:8080/internal/platform/readiness
 curl -s http://localhost:8080/internal/platform/dependencies
+curl -s http://localhost:8080/internal/platform/dependencies/legacy
+curl -s http://localhost:8080/internal/platform/transition
 curl -s http://localhost:8080/internal/platform/auth/context
+curl -s -X POST http://localhost:8080/internal/platform/jobs/platform-smoke/executions
 ```
 
 ### Expected result
@@ -145,11 +157,18 @@ curl -s http://localhost:8080/internal/platform/auth/context
 mvn -f backend/pom.xml -pl foundation-ear -am clean package -P dev
 ```
 
+Verificacion de estructura:
+
+```bash
+backend/scripts/verify-ear.sh backend/foundation-ear/target/foundation-ear-0.1.0-SNAPSHOT.ear
+```
+
 Resultado esperado:
 
 - Se genera un `.ear` listo para promoverse a un despliegue candidato.
 - El build falla si alguna validacion de contrato, pruebas o empaquetado no
   cumple.
+- La estructura contiene `META-INF/application.xml` y el `WAR` de `foundation-web`.
 
 ## 4. Fallback operativo
 
@@ -157,13 +176,43 @@ Si `local-oracle` falla:
 
 1. volver a `local-mock`,
 2. validar contratos y jobs de plataforma,
-3. documentar la dependencia no disponible,
-4. no avanzar a migracion funcional hasta resolver la brecha.
+3. consultar `GET /internal/platform/dependencies/legacy` para confirmar el inventario temporal y su modo `READ_ONLY`,
+4. consultar `GET /internal/platform/transition` para registrar si el rollback queda `READY` o `ACTIVE`,
+5. documentar la dependencia no disponible,
+6. no avanzar a migracion funcional hasta resolver la brecha.
 
-## 5. Non-goals of this quickstart
+## 5. Coexistencia temporal con legado
+
+Limites operativos de la fundacion:
+
+- las dependencias catalogadas del legado son evidencia y soporte transitorio, no destino primario del backend institucional;
+- los bridges a Sheets y Drive se exponen solo en modo `READ_ONLY`;
+- cualquier intento de write contra bridges legados debe fallar de forma explicita;
+- el criterio de retiro de cada dependencia temporal debe revisarse antes de abrir un slice funcional.
+
+Smoke checks adicionales para US2:
+
+```bash
+curl -s http://localhost:8080/internal/platform/dependencies/legacy
+curl -s http://localhost:8080/internal/platform/transition
+```
+
+## 6. Non-goals of this quickstart
 
 - No migra modulos de negocio del legado.
 - No implementa integracion final con Azure Entra ID.
 - No habilita el dominio de WhatsApp.
 - No migra aun Resumen de Clientes ni Categorizacion de Clientes; esos son los
   slices funcionales siguientes a la fundacion.
+
+## 7. Validation record
+
+Validacion ejecutada durante el cierre de foundation:
+
+- `mvn -f backend/pom.xml -DskipTests package` -> `BUILD SUCCESS`
+- `mvn -f backend/pom.xml -pl foundation-ear -am -DskipTests package` -> empaquetado `EAR` generado
+
+Pendiente de ejecucion fuera de este cierre:
+
+- smoke HTTP completo contra un contenedor local desplegado;
+- `tests/integration/websphere9_packaging_smoke_test.sh` en un shell POSIX disponible.

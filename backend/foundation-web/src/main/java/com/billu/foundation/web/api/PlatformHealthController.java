@@ -11,7 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-@Path("/internal/platform/health")
+@Path("/platform/health")
 @Produces(MediaType.APPLICATION_JSON)
 public class PlatformHealthController {
   private final LocalValidationService localValidationService;

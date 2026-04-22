@@ -55,6 +55,17 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/DependencySummary'
+  /internal/platform/dependencies/legacy:
+    get:
+      summary: Inventario temporal de dependencias legadas en coexistencia
+      operationId: listLegacyDependencies
+      responses:
+        '200':
+          description: Dependencias legadas catalogadas para la transicion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegacyDependenciesResponse'
   /internal/platform/auth/context:
     get:
       summary: Contexto de acceso efectivo para la solicitud actual
@@ -140,6 +151,17 @@ paths:
                 $ref: '#/components/schemas/MockDatasetLoadResponse'
         '400':
           description: Modo actual no permite datasets mockeados
+  /internal/platform/transition:
+    get:
+      summary: Estado de coexistencia y rollback con el legado
+      operationId: getTransitionStatus
+      responses:
+        '200':
+          description: Estado actual de transicion de la plataforma
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransitionStatusResponse'
 components:
   schemas:
     HealthResponse:
@@ -286,4 +308,69 @@ components:
         version:
           type: string
         correlationId:
+          type: string
+    LegacyDependencyResponse:
+      type: object
+      required:
+        - dependencyKey
+        - dependencyType
+        - sourceReference
+        - accessMode
+        - status
+      properties:
+        dependencyKey:
+          type: string
+        dependencyType:
+          type: string
+        sourceReference:
+          type: string
+        businessCapability:
+          type: string
+        accessMode:
+          type: string
+          enum: [READ_ONLY, REFERENCE_ONLY]
+        owner:
+          type: string
+        exitCriteria:
+          type: string
+        riskLevel:
+          type: string
+        status:
+          type: string
+          enum: [BRIDGED, DISCOVERED, RETIRED]
+    LegacyDependenciesResponse:
+      type: object
+      required:
+        - environment
+        - bridgeMode
+        - dependencies
+      properties:
+        environment:
+          type: string
+        bridgeMode:
+          type: string
+          enum: [READ_ONLY, DISABLED]
+        dependencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/LegacyDependencyResponse'
+    TransitionStatusResponse:
+      type: object
+      required:
+        - status
+        - rollbackState
+        - activeSystem
+        - environment
+      properties:
+        status:
+          type: string
+          enum: [COEXISTING, FALLBACK_TO_LEGACY, FOUNDATION_ONLY]
+        rollbackState:
+          type: string
+          enum: [READY, ACTIVE, UNAVAILABLE]
+        activeSystem:
+          type: string
+        environment:
+          type: string
+        evidence:
           type: string

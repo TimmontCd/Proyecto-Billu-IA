@@ -2,6 +2,7 @@ package com.billu.foundation.application.validation;
 
 import com.billu.foundation.application.auth.AccessContextQueryUseCase;
 import com.billu.foundation.application.datasets.MockDatasetLoadCommand;
+import com.billu.foundation.application.datasets.MockDatasetValidator;
 import com.billu.foundation.application.datasets.MockDatasetLoadUseCase;
 import com.billu.foundation.application.dependencies.DependencyQueryUseCase;
 import com.billu.foundation.application.dependencies.DependencyStatus;
@@ -27,10 +28,19 @@ public class LocalValidationService implements HealthCheckUseCase, ReadinessUseC
   private final String secretProvider;
   private final OracleReadinessGateway oracleReadinessGateway;
   private final MockDatasetGateway mockDatasetGateway;
+  private final MockDatasetValidator mockDatasetValidator;
 
   public LocalValidationService(EnvironmentProfile environmentProfile, String serviceName,
       String serviceVersion, String schedulerCatalogPath, String secretProvider,
       OracleReadinessGateway oracleReadinessGateway, MockDatasetGateway mockDatasetGateway) {
+    this(environmentProfile, serviceName, serviceVersion, schedulerCatalogPath, secretProvider,
+        oracleReadinessGateway, mockDatasetGateway, new MockDatasetValidator());
+  }
+
+  public LocalValidationService(EnvironmentProfile environmentProfile, String serviceName,
+      String serviceVersion, String schedulerCatalogPath, String secretProvider,
+      OracleReadinessGateway oracleReadinessGateway, MockDatasetGateway mockDatasetGateway,
+      MockDatasetValidator mockDatasetValidator) {
     this.environmentProfile = environmentProfile;
     this.serviceName = serviceName;
     this.serviceVersion = serviceVersion;
@@ -38,6 +48,7 @@ public class LocalValidationService implements HealthCheckUseCase, ReadinessUseC
     this.secretProvider = secretProvider;
     this.oracleReadinessGateway = oracleReadinessGateway;
     this.mockDatasetGateway = mockDatasetGateway;
+    this.mockDatasetValidator = mockDatasetValidator;
   }
 
   @Override
@@ -127,6 +138,7 @@ public class LocalValidationService implements HealthCheckUseCase, ReadinessUseC
       if (dataset == null) {
         throw new IllegalArgumentException("Dataset not found: " + command.getDatasetKey());
       }
+      mockDatasetValidator.validate(dataset);
       return new MockDataset(
           dataset.getDatasetKey(),
           dataset.getVersion(),

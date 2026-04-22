@@ -12,7 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/internal/platform")
+@Path("/platform")
 @Produces(MediaType.APPLICATION_JSON)
 public class PlatformReadinessController {
   private final LocalValidationService localValidationService;

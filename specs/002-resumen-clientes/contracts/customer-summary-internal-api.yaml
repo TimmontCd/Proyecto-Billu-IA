@@ -1,0 +1,244 @@
+openapi: 3.0.3
+info:
+  title: Billu Customer Summary Internal API
+  version: 0.1.0
+  description: >
+    Contrato interno del slice Resumen de Clientes sobre la foundation
+    institucional. Cubre consultas de lectura y exportables controlados.
+servers:
+  - url: http://localhost:8080
+    description: Local development
+paths:
+  /internal/customer-summary/overview:
+    get:
+      summary: Obtiene el resumen ejecutivo del slice
+      operationId: getCustomerSummaryOverview
+      responses:
+        '200':
+          description: Resumen ejecutivo generado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerSummaryOverviewResponse'
+  /internal/customer-summary/historical:
+    get:
+      summary: Obtiene el histórico de aperturas por rango
+      operationId: getCustomerSummaryHistorical
+      parameters:
+        - name: startDate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Histórico calculado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerSummaryHistoricalResponse'
+  /internal/customer-summary/first30:
+    get:
+      summary: Obtiene las cohortes First 30
+      operationId: getCustomerSummaryFirst30
+      responses:
+        '200':
+          description: Cohortes calculadas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerSummaryFirst30Response'
+  /internal/customer-summary/cards/coverage:
+    get:
+      summary: Obtiene cobertura de plásticos y uso reciente
+      operationId: getCustomerSummaryCardCoverage
+      responses:
+        '200':
+          description: Cobertura generada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardCoverageResponse'
+  /internal/customer-summary/exports/historical-month:
+    post:
+      summary: Genera exportable histórico mensual
+      operationId: exportCustomerSummaryHistoricalMonth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MonthlyExportRequest'
+      responses:
+        '202':
+          description: Exportable generado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportResponse'
+  /internal/customer-summary/exports/first30-month:
+    post:
+      summary: Genera exportable First 30 mensual
+      operationId: exportCustomerSummaryFirst30Month
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MonthlyExportRequest'
+      responses:
+        '202':
+          description: Exportable generado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportResponse'
+  /internal/customer-summary/exports/card-coverage:
+    post:
+      summary: Genera exportable de cobertura de plásticos
+      operationId: exportCustomerSummaryCardCoverage
+      responses:
+        '202':
+          description: Exportable generado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportResponse'
+components:
+  schemas:
+    CustomerSummaryOverviewResponse:
+      type: object
+      required:
+        - environment
+        - sourceMode
+        - kpis
+        - productSummary
+      properties:
+        environment:
+          type: string
+        sourceMode:
+          type: string
+        executiveSummary:
+          type: string
+        correlationId:
+          type: string
+        kpis:
+          type: object
+          additionalProperties:
+            type: number
+        productSummary:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductSummaryItem'
+    CustomerSummaryHistoricalResponse:
+      type: object
+      required:
+        - environment
+        - filters
+        - trend
+        - monthlySummary
+      properties:
+        environment:
+          type: string
+        correlationId:
+          type: string
+        filters:
+          type: object
+          additionalProperties: true
+        trend:
+          type: object
+          additionalProperties: true
+        monthlySummary:
+          type: object
+          additionalProperties: true
+    CustomerSummaryFirst30Response:
+      type: object
+      required:
+        - environment
+        - referenceDate
+        - totalSummary
+        - monthlySummary
+      properties:
+        environment:
+          type: string
+        correlationId:
+          type: string
+        referenceDate:
+          type: string
+          format: date
+        totalSummary:
+          type: object
+          additionalProperties: true
+        monthlySummary:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    CardCoverageResponse:
+      type: object
+      required:
+        - environment
+        - summary
+      properties:
+        environment:
+          type: string
+        correlationId:
+          type: string
+        summary:
+          type: object
+          additionalProperties: true
+    MonthlyExportRequest:
+      type: object
+      required:
+        - selectedYear
+        - selectedMonth
+      properties:
+        selectedYear:
+          type: integer
+        selectedMonth:
+          type: integer
+    ExportResponse:
+      type: object
+      required:
+        - exportType
+        - outcome
+        - rowCount
+        - correlationId
+      properties:
+        exportType:
+          type: string
+        outcome:
+          type: string
+          enum: [SUCCEEDED, FAILED]
+        fileName:
+          type: string
+        rowCount:
+          type: integer
+        correlationId:
+          type: string
+        summary:
+          type: string
+    ProductSummaryItem:
+      type: object
+      required:
+        - productKey
+        - productLabel
+        - accounts
+      properties:
+        productKey:
+          type: string
+        productLabel:
+          type: string
+        accounts:
+          type: integer
+        sharePct:
+          type: number
+        totalBalance:
+          type: number
