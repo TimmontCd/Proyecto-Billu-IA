@@ -29,7 +29,18 @@ public class ProfileSwitchConfig {
   }
 
   public EnvironmentProfile resolveEnvironmentProfile() {
-    return environmentProfileResolver.resolve(activeEnvironment, getSecretProvider(), getDeploymentTarget());
+    boolean defaultMockEnabled = "local-mock".equals(activeEnvironment);
+    boolean defaultOracleEnabled = "local-oracle".equals(activeEnvironment)
+        || "dev".equals(activeEnvironment) || "qa".equals(activeEnvironment);
+    boolean defaultLegacyBridgeEnabled = activeEnvironment != null
+        && activeEnvironment.startsWith("local");
+    return environmentProfileResolver.resolve(
+        activeEnvironment,
+        getBooleanProperty("billu.mock.enabled", defaultMockEnabled),
+        getBooleanProperty("billu.oracle.enabled", defaultOracleEnabled),
+        getBooleanProperty("billu.legacy.bridge.enabled", defaultLegacyBridgeEnabled),
+        getSecretProvider(),
+        getDeploymentTarget());
   }
 
   public String getSchedulerCatalogPath() {
@@ -71,6 +82,12 @@ public class ProfileSwitchConfig {
     }
     String value = mergedProperties.getProperty(key);
     return value == null || value.trim().isEmpty() ? defaultValue : value;
+  }
+
+  public boolean getBooleanProperty(String key, boolean defaultValue) {
+    String value = getProperty(key, String.valueOf(defaultValue));
+    return "true".equalsIgnoreCase(value) || "1".equals(value)
+        || "yes".equalsIgnoreCase(value);
   }
 
   private String resolveExternal(String envKey, String propertyKey) {

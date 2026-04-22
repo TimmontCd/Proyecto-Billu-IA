@@ -13,6 +13,13 @@ public class EnvironmentProfileResolver {
     boolean oracleEnabled = "local-oracle".equals(environmentKey) || "dev".equals(environmentKey)
         || "qa".equals(environmentKey);
     boolean legacyBridgeEnabled = environmentKey != null && environmentKey.startsWith("local");
+    return resolve(environmentKey, mockEnabled, oracleEnabled, legacyBridgeEnabled, secretSource,
+        deploymentTarget);
+  }
+
+  public EnvironmentProfile resolve(String environmentKey, boolean mockEnabled,
+      boolean oracleEnabled, boolean legacyBridgeEnabled, String secretSource,
+      String deploymentTarget) {
     return new EnvironmentProfile(
         environmentKey,
         environmentKey,

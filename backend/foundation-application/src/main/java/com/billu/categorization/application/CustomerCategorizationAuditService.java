@@ -32,4 +32,17 @@ public class CustomerCategorizationAuditService {
         correlationId,
         "Lookup requested for rewardsId " + rewardsId + " with matches " + totalMatches);
   }
+
+  public void recordExportRequest(String actor, String environment, String correlationId,
+      String exportType, String segmentId, String outcome, String fileName) {
+    auditTrailService.record(
+        "CUSTOMER_CATEGORIZATION_EXPORT_REQUESTED",
+        "CUSTOMER_CATEGORIZATION_EXPORT",
+        segmentId,
+        actor,
+        environment,
+        correlationId,
+        "Export " + exportType + " for segment " + segmentId + " finished as "
+            + outcome + " using file " + fileName);
+  }
 }

@@ -45,18 +45,18 @@ antes de sustituir el consumo del legado.
 
 ## Phase 5: User Story 3 - Exportables de Segmento y Venta Cruzada (P3)
 
-- [ ] T025 [P] [US3] Create contract tests for export endpoints in `tests/contract/customer_categorization_exports_contract_test.java`
-- [ ] T026 [P] [US3] Create integration test for segment export in `tests/integration/customer_categorization_segment_export_test.java`
-- [ ] T027 [P] [US3] Create integration test for cross-sell export audit traceability in `tests/integration/customer_categorization_cross_sell_export_test.java`
-- [ ] T028 [P] [US3] Implement export use case in `backend/foundation-application/src/main/java/com/billu/categorization/application/ExportCustomerCategorizationUseCase.java`
-- [ ] T029 [P] [US3] Implement export response DTOs in `backend/foundation-web/src/main/java/com/billu/categorization/web/api/`
-- [ ] T030 [US3] Implement export controller in `backend/foundation-web/src/main/java/com/billu/categorization/web/api/CustomerCategorizationExportController.java`
-- [ ] T031 [US3] Implement export adapters and rollback-safe source selection in categorization legacy/web packages
+- [X] T025 [P] [US3] Create contract tests for export endpoints in `tests/contract/customer_categorization_exports_contract_test.java`
+- [X] T026 [P] [US3] Create integration test for segment export in `tests/integration/customer_categorization_segment_export_test.java`
+- [X] T027 [P] [US3] Create integration test for cross-sell export audit traceability in `tests/integration/customer_categorization_cross_sell_export_test.java`
+- [X] T028 [P] [US3] Implement export use case in `backend/foundation-application/src/main/java/com/billu/categorization/application/ExportCustomerCategorizationUseCase.java`
+- [X] T029 [P] [US3] Implement export response DTOs in `backend/foundation-web/src/main/java/com/billu/categorization/web/api/`
+- [X] T030 [US3] Implement export controller in `backend/foundation-web/src/main/java/com/billu/categorization/web/api/CustomerCategorizationExportController.java`
+- [X] T031 [US3] Implement export adapters and rollback-safe source selection in categorization legacy/web packages
 
 ## Phase 6: Polish
 
-- [ ] T032 [P] Create architecture notes for the slice in `docs/customer-categorization-architecture.md`
-- [ ] T033 [P] Update runbook, quickstart and rollout notes in `docs/customer-categorization-runbook.md` and `specs/003-categorizacion-clientes/quickstart.md`
-- [ ] T034 Harden validation and mapping edge cases in categorization application validators
-- [ ] T035 Run end-to-end build and record final command set in `specs/003-categorizacion-clientes/quickstart.md`
-- [ ] T036 [P] Update agent traceability context in `AGENTS.md`
+- [X] T032 [P] Create architecture notes for the slice in `docs/customer-categorization-architecture.md`
+- [X] T033 [P] Update runbook, quickstart and rollout notes in `docs/customer-categorization-runbook.md` and `specs/003-categorizacion-clientes/quickstart.md`
+- [X] T034 Harden validation and mapping edge cases in categorization application validators
+- [X] T035 Run end-to-end build and record final command set in `specs/003-categorizacion-clientes/quickstart.md`
+- [X] T036 [P] Update agent traceability context in `AGENTS.md`

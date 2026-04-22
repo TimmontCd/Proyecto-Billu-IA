@@ -24,6 +24,7 @@ import com.billu.accounts.infrastructure.oracle.OracleAccountsExportRepository;
 import com.billu.accounts.infrastructure.oracle.OracleAccountsHistoricalRepository;
 import com.billu.accounts.infrastructure.oracle.OracleAccountsSummaryRepository;
 import com.billu.foundation.domain.EnvironmentProfile;
+import com.billu.foundation.web.config.ProfileSwitchConfig;
 import com.billu.foundation.web.setup.PlatformComponentFactory;
 
 public final class CustomerSummaryComponentFactory {
@@ -119,6 +120,7 @@ public final class CustomerSummaryComponentFactory {
   }
 
   private static AccountsSummaryGateway buildAccountsSummaryGateway() {
+    ProfileSwitchConfig profileSwitchConfig = PlatformComponentFactory.getProfileSwitchConfig();
     EnvironmentProfile environmentProfile = PlatformComponentFactory.getProfileSwitchConfig()
         .resolveEnvironmentProfile();
     if (environmentProfile.isMockModeEnabled()) {
@@ -129,7 +131,11 @@ public final class CustomerSummaryComponentFactory {
     if (environmentProfile.isLegacyBridgeEnabled()) {
       return new LegacyAccountsSummaryAdapter();
     }
-    return new OracleAccountsSummaryRepository();
+    return new OracleAccountsSummaryRepository(
+        profileSwitchConfig.getActiveEnvironment(),
+        profileSwitchConfig.getOracleUrl(),
+        profileSwitchConfig.getOracleUser(),
+        profileSwitchConfig.getOraclePassword());
   }
 
   private static AccountsHistoricalGateway buildAccountsHistoricalGateway() {

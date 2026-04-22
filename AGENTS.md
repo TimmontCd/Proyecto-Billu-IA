@@ -33,4 +33,6 @@ Java 8: Follow standard conventions
 - Local toolchain verified with JDK 8 (`C:\Program Files\Java\jdk1.8.0_202`) and Maven 3.9.14.
 - 002-resumen-clientes: backend slice complete through overview, historical, first30, card coverage and controlled exports with local-mock, legacy read-only fallback, audit and metrics.
 - 002-resumen-clientes: frontend-ready internal endpoints available for initial institutional UI integration.
+- 003-categorizacion-clientes: backend slice complete through dashboard, lookup por `ID RECOMPENSAS`, export por segmento y export de venta cruzada con local-mock, legacy read-only fallback, audit and metrics.
+- `local-oracle` now honors explicit profile flags from environment properties and no longer degrades automatically to legacy when `billu.legacy.bridge.enabled=false`.
 <!-- MANUAL ADDITIONS END -->

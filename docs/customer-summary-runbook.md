@@ -17,6 +17,14 @@ legacy domain and prepare the backend for the first institutional frontend.
 - `legacy read-only`: temporary fallback while Oracle projections are incomplete
 - `oracle`: target source for the institutional slice
 
+## Oracle readiness note
+
+- `overview` already has a JDBC Oracle adapter wired through `local-oracle`.
+- `historical`, `first30`, `cards/coverage` and summary exports still remain on
+  placeholder Oracle boundaries until their queries are implemented.
+- Without `BILLU_ORACLE_URL`, `BILLU_ORACLE_USER` and `BILLU_ORACLE_PASSWORD`,
+  `local-oracle` must fail fast instead of degrading silently.
+
 ## Rollback trigger
 
 - any main endpoint breaks contract

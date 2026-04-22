@@ -6,6 +6,7 @@ import com.billu.accounts.web.api.CustomerSummaryFirst30Controller;
 import com.billu.accounts.web.api.CustomerSummaryCardCoverageController;
 import com.billu.accounts.web.api.CustomerSummaryExportController;
 import com.billu.categorization.web.api.CustomerCategorizationDashboardController;
+import com.billu.categorization.web.api.CustomerCategorizationExportController;
 import com.billu.categorization.web.api.CustomerCategorizationLookupController;
 import com.billu.foundation.web.api.PlatformAuthController;
 import com.billu.foundation.web.api.PlatformHealthController;
@@ -34,7 +35,9 @@ public class PlatformApplication extends ResourceConfig {
     register(CustomerSummaryExportController.class);
     register(CustomerCategorizationDashboardController.class);
     register(CustomerCategorizationLookupController.class);
+    register(CustomerCategorizationExportController.class);
     register(GlobalExceptionMapper.class);
     register(JacksonFeature.class);
+    register(ObjectMapperProvider.class);
   }
 }
