@@ -10,6 +10,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -112,7 +113,7 @@ public class OracleCustomerCategorizationDashboardRepository
           getEnvironment(),
           SOURCE_MODE,
           buildExecutiveSummary(aggregate, segmentSummary),
-          latestSnapshotDate.toInstant(),
+          new Timestamp(latestSnapshotDate.getTime()).toInstant(),
           kpis,
           segmentSummary);
     } catch (SQLException exception) {

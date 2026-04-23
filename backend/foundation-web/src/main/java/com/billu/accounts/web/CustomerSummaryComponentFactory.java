@@ -139,6 +139,7 @@ public final class CustomerSummaryComponentFactory {
   }
 
   private static AccountsHistoricalGateway buildAccountsHistoricalGateway() {
+    ProfileSwitchConfig profileSwitchConfig = PlatformComponentFactory.getProfileSwitchConfig();
     EnvironmentProfile environmentProfile = PlatformComponentFactory.getProfileSwitchConfig()
         .resolveEnvironmentProfile();
     if (environmentProfile.isMockModeEnabled()) {
@@ -149,10 +150,15 @@ public final class CustomerSummaryComponentFactory {
     if (environmentProfile.isLegacyBridgeEnabled()) {
       return new LegacyAccountsHistoricalAdapter();
     }
-    return new OracleAccountsHistoricalRepository();
+    return new OracleAccountsHistoricalRepository(
+        profileSwitchConfig.getActiveEnvironment(),
+        profileSwitchConfig.getOracleUrl(),
+        profileSwitchConfig.getOracleUser(),
+        profileSwitchConfig.getOraclePassword());
   }
 
   private static AccountsCardCoverageGateway buildAccountsCardCoverageGateway() {
+    ProfileSwitchConfig profileSwitchConfig = PlatformComponentFactory.getProfileSwitchConfig();
     EnvironmentProfile environmentProfile = PlatformComponentFactory.getProfileSwitchConfig()
         .resolveEnvironmentProfile();
     if (environmentProfile.isMockModeEnabled()) {
@@ -171,10 +177,15 @@ public final class CustomerSummaryComponentFactory {
     if (environmentProfile.isLegacyBridgeEnabled()) {
       return new LegacyAccountsCardCoverageAdapter();
     }
-    return new OracleAccountsCardCoverageRepository();
+    return new OracleAccountsCardCoverageRepository(
+        profileSwitchConfig.getActiveEnvironment(),
+        profileSwitchConfig.getOracleUrl(),
+        profileSwitchConfig.getOracleUser(),
+        profileSwitchConfig.getOraclePassword());
   }
 
   private static AccountsExportGateway buildAccountsExportGateway() {
+    ProfileSwitchConfig profileSwitchConfig = PlatformComponentFactory.getProfileSwitchConfig();
     EnvironmentProfile environmentProfile = PlatformComponentFactory.getProfileSwitchConfig()
         .resolveEnvironmentProfile();
     if (environmentProfile.isMockModeEnabled()) {
@@ -183,6 +194,10 @@ public final class CustomerSummaryComponentFactory {
     if (environmentProfile.isLegacyBridgeEnabled()) {
       return new LegacyAccountsExportAdapter();
     }
-    return new OracleAccountsExportRepository();
+    return new OracleAccountsExportRepository(
+        profileSwitchConfig.getActiveEnvironment(),
+        profileSwitchConfig.getOracleUrl(),
+        profileSwitchConfig.getOracleUser(),
+        profileSwitchConfig.getOraclePassword());
   }
 }
