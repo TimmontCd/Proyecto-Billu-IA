@@ -31,19 +31,20 @@ DEFAULT_SOURCE_SHEET_NAME = "CLIENT_BALANCE_SHEET_NAME"
 DEFAULT_SOURCE_SYSTEM = "GSHEET_REAL_BALANCES"
 DEFAULT_DOCKER_CONTEXT = "desktop-linux"
 DEFAULT_CONTAINER = "billu-oracle-free"
-DEFAULT_CONNECT_STRING = "BILLU_READ/BilluRead2026!@localhost:1521/FREEPDB1"
+DEFAULT_CONNECT_STRING = os.environ.get(
+    "BILLU_SQLPLUS_CONNECT_STRING",
+    "BILLU_READ/BILLU_READ@localhost:1521/FREEPDB1",
+)
 DEFAULT_BATCH_PREFIX = "gsheet-customer-summary"
 DEFAULT_COMMIT_SIZE = 1000
-CSV_HEADERS = (
-    "ID RECOMPENSA",
-    "ESTATUS DE LA CUENTA",
-    "FECHA DE APERTURA CUENTA",
-    "PRODUCTO DE LA CUENTA",
-    "ESTADO",
-    "GENERO",
-    "EDAD",
-    "SALDO PROMEDIO",
-    "SALDO PUNTUAL",
+REQUIRED_HEADER_GROUPS = (
+    ("ID RECOMPENSA", "ID RECOMPENSAS"),
+    ("ESTATUS DE LA CUENTA",),
+    ("FECHA DE APERTURA CUENTA",),
+    ("PRODUCTO DE LA CUENTA",),
+    ("ESTADO",),
+    ("GENERO",),
+    ("SALDO PROMEDIO", "SALDO PROMEDIO HOY"),
 )
 
 
@@ -92,12 +93,27 @@ def download_rows(sheet_id, gid):
     response = urllib.request.urlopen(request)
     text = response.read().decode("utf-8-sig")
     reader = csv.DictReader(io.StringIO(text))
-    headers = tuple(reader.fieldnames or ())
-    if headers != CSV_HEADERS:
-        raise ValueError(
-            "Unexpected CSV headers: {}. Expected {}.".format(headers, CSV_HEADERS)
-        )
+    validate_headers(tuple(reader.fieldnames or ()))
     return list(reader)
+
+
+def validate_headers(headers):
+    missing = []
+    header_set = set(headers)
+    for group in REQUIRED_HEADER_GROUPS:
+        if not any(header in header_set for header in group):
+            missing.append(" / ".join(group))
+    if missing:
+        raise ValueError(
+            "Missing required CSV headers: {}. Received {}.".format(missing, headers)
+        )
+
+
+def row_value(row, *headers):
+    for header in headers:
+        if header in row:
+            return row.get(header)
+    return None
 
 
 def parse_money(value):
@@ -116,17 +132,39 @@ def parse_money(value):
     return amount.quantize(Decimal("0.01"))
 
 
-def parse_opening_date(value):
+def parse_source_date(value):
     text = "" if value is None else str(value).strip()
     if text.endswith(".0"):
         text = text[:-2]
+    for pattern in ("%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y"):
+        try:
+            return dt.datetime.strptime(text, pattern).date()
+        except ValueError:
+            pass
     digits = "".join(ch for ch in text if ch.isdigit())
     if len(digits) != 8:
-        raise ValueError("Invalid opening date: {}".format(value))
-    year = int(digits[0:4])
-    month = int(digits[4:6])
-    day = int(digits[6:8])
+        raise ValueError("Invalid date: {}".format(value))
+    first = int(digits[0:4])
+    if first >= 1900:
+        year = first
+        month = int(digits[4:6])
+        day = int(digits[6:8])
+    else:
+        day = int(digits[0:2])
+        month = int(digits[2:4])
+        year = int(digits[4:8])
     return dt.date(year, month, day)
+
+
+def parse_opening_date(value):
+    return parse_source_date(value)
+
+
+def parse_optional_date(value):
+    text = "" if value is None else str(value).strip()
+    if not text:
+        return None
+    return parse_source_date(text)
 
 
 def normalize_status(value):
@@ -153,6 +191,13 @@ def normalize_age(value):
     return age if 0 <= age <= 120 else None
 
 
+def normalize_email(value):
+    text = normalize_text(value)
+    if text is None:
+        return None
+    return text.lower()
+
+
 def normalize_text(value):
     if value is None:
         return None
@@ -168,6 +213,12 @@ def sql_string(value):
 
 def money_to_sql(value):
     return format(value, "f")
+
+
+def date_to_sql(value):
+    if value is None:
+        return "NULL"
+    return "DATE '{}'".format(value.isoformat())
 
 
 def monthly_label(snapshot_date):
@@ -191,35 +242,44 @@ def transform_rows(rows):
     }
 
     for row in rows:
-        rewards_id = normalize_text(row["ID RECOMPENSA"])
+        rewards_id = normalize_text(row_value(row, "ID RECOMPENSA", "ID RECOMPENSAS"))
         if rewards_id is None or rewards_id.upper() == "NULL":
             stats["skipped_null_rewards"] += 1
             continue
 
         try:
-            opening_date = parse_opening_date(row["FECHA DE APERTURA CUENTA"])
+            opening_date = parse_opening_date(row_value(row, "FECHA DE APERTURA CUENTA"))
+            birth_date = parse_optional_date(row_value(row, "FECHA DE NACIMIENTO"))
         except (TypeError, ValueError):
             stats["skipped_bad_date"] += 1
             continue
 
         try:
-            average_balance = parse_money(row["SALDO PROMEDIO"])
-            puntual_balance = parse_money(row["SALDO PUNTUAL"])
+            average_balance = parse_money(row_value(row, "SALDO PROMEDIO", "SALDO PROMEDIO HOY"))
+            puntual_balance = parse_money(row_value(
+                row,
+                "SALDO PUNTUAL",
+                "SALDO PROMEDIO HOY",
+                "SALDO PROMEDIO",
+            ))
         except (InvalidOperation, TypeError, ValueError):
             stats["skipped_bad_balance"] += 1
             continue
 
-        account_status = normalize_status(row["ESTATUS DE LA CUENTA"])
-        product_code = normalize_text(row["PRODUCTO DE LA CUENTA"]) or "UNKNOWN"
+        account_status = normalize_status(row_value(row, "ESTATUS DE LA CUENTA"))
+        product_code = normalize_text(row_value(row, "PRODUCTO DE LA CUENTA")) or "UNKNOWN"
         product_active_flag = "N" if account_status == "CANCELLED" else "Y"
 
         customers.append({
             "rewards_id": rewards_id,
             "account_status": account_status,
             "opening_date": opening_date,
-            "state_name": normalize_text(row["ESTADO"]),
-            "gender_code": normalize_gender(row["GENERO"]),
-            "age_years": normalize_age(row["EDAD"]),
+            "state_name": normalize_text(row_value(row, "ESTADO")),
+            "gender_code": normalize_gender(row_value(row, "GENERO")),
+            "birth_date": birth_date,
+            "age_years": normalize_age(row_value(row, "EDAD")),
+            "email_address": normalize_email(row_value(row, "CORREO")),
+            "current_avg_balance_amount": average_balance,
         })
         products.append({
             "rewards_id": rewards_id,
@@ -269,17 +329,21 @@ def emit_customer_inserts(handle, customers, source_system, source_sheet_id, sou
     for index, row in enumerate(customers, start=1):
         handle.write(
             "INSERT INTO DLK_CUSTOMER ("
-            "REWARDS_ID, ACCOUNT_STATUS, OPENING_DATE, STATE_NAME, GENDER_CODE, AGE_YEARS, "
+            "REWARDS_ID, ACCOUNT_STATUS, OPENING_DATE, STATE_NAME, GENDER_CODE, "
+            "BIRTH_DATE, AGE_YEARS, EMAIL_ADDRESS, CURRENT_AVG_BALANCE_AMOUNT, "
             "SOURCE_SYSTEM, SOURCE_SPREADSHEET_ID, SOURCE_SHEET_NAME, INGESTION_BATCH_ID"
             ") VALUES ("
         )
         handle.write(", ".join([
             sql_string(row["rewards_id"]),
             sql_string(row["account_status"]),
-            "DATE '{}'".format(row["opening_date"].isoformat()),
+            date_to_sql(row["opening_date"]),
             sql_string(row["state_name"]),
             sql_string(row["gender_code"]),
+            date_to_sql(row["birth_date"]),
             "NULL" if row["age_years"] is None else str(row["age_years"]),
+            sql_string(row["email_address"]),
+            money_to_sql(row["current_avg_balance_amount"]),
             sql_string(source_system),
             sql_string(source_sheet_id),
             sql_string(source_sheet_name),

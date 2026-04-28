@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Billu | Categorizacion de clientes</title>
+    <link rel="stylesheet" href="../assets/app-shell.css">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body data-module="customer-categorization">
+    <div class="shell">
+      <aside data-billu-sidebar></aside>
+
+      <div class="app-shell">
+        <header class="app-header">
+          <div class="title-block">
+            <h1>Categorizacion de clientes</h1>
+            <p>Segmentacion automatica de clientes a partir de sus saldos y atributos operativos.</p>
+          </div>
+        </header>
+
+        <main class="workspace">
+          <div id="statusBanner" class="status-banner">
+            Segmentacion lista desde Clientes y Cuentas, disponible para consulta y descarga.
+          </div>
+
+          <section class="panel">
+            <div class="executive-hero">
+              <div class="hero-copy">
+                <p class="section-kicker">Segmentacion automatica</p>
+                <h2>Categorizacion de cliente v0.7.3</h2>
+                <p id="heroSummary">
+                  Cargando segmentacion desde Clientes y Cuentas.
+                </p>
+              </div>
+              <aside class="hero-aside">
+                <span>Fuente</span>
+                <strong id="heroSource">Clientes + Cuentas</strong>
+              </aside>
+            </div>
+
+            <form id="lookupForm" class="action-row">
+              <button id="refreshSegmentsBtn" class="primary-button" type="button">
+                Actualizar segmentos
+              </button>
+              <label class="lookup-field">
+                <span>ID RECOMPENSAS</span>
+                <input id="rewardsIdInput" type="text" autocomplete="off" placeholder="ID RECOMPENSAS">
+              </label>
+              <button class="soft-button" type="submit">Consultar ID</button>
+            </form>
+
+            <div id="kpiGrid" class="kpi-grid" aria-live="polite"></div>
+          <section id="lookupPanel" class="lookup-panel" hidden>
+            <div class="lookup-panel-head">
+              <div>
+                <h3>Resultado de consulta por ID RECOMPENSAS</h3>
+                <p>Busca el ID desde la barra superior para ver su nivel, tarjeta recomendada y oportunidad comercial dentro del universo activo.</p>
+              </div>
+            </div>
+            <p id="lookupSummary" class="muted-note"></p>
+            <div id="lookupResults" class="lookup-results"></div>
+          </section>
+          </section>
+
+          <section class="panel levels-panel" aria-labelledby="levelsTitle">
+            <div class="levels-copy">
+              <h2 id="levelsTitle">Niveles de cliente</h2>
+              <p>
+                Descarga la base directa de cada nivel con tarjeta sugerida, transaccionalidad,
+                productos activos y campana personalizada.
+              </p>
+              <p id="levelsSourceMeta" class="muted-note">
+                Fuente: <strong>Clientes + Cuentas</strong>
+              </p>
+            </div>
+            <div class="table-wrap">
+              <table class="state-table">
+                <thead>
+                  <tr>
+                    <th>Base cruzada</th>
+                    <th>Nivel</th>
+                    <th>Regla</th>
+                    <th>Clientes</th>
+                    <th>% del universo</th>
+                  </tr>
+                </thead>
+                <tbody id="levelsBody">
+                  <tr>
+                    <td colspan="5">Cargando niveles.</td>
+                  </tr>
+                </tbody>
+                <tfoot id="levelsTotal"></tfoot>
+              </table>
+            </div>
+            <div id="exportLog" class="export-log" hidden></div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+    <script src="../assets/app-shell.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

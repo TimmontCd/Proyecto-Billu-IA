@@ -9,6 +9,7 @@ build/
 *.log
 .env
 .env.*
+!.env.example
 .idea/
 .vscode/
 .m2/

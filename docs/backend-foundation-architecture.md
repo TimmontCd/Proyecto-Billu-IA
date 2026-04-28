@@ -3,40 +3,42 @@
 ## Scope
 
 La fundacion institucional del backend de Billu entrega la base tecnica para
-arranque local, despliegue institucional, coexistencia temporal con el legado,
-ejecucion de jobs, observabilidad y preparacion de slices funcionales
-posteriores.
+arranque local, coexistencia temporal con el legado, ejecucion de jobs,
+observabilidad y preparacion de modulos funcionales posteriores.
 
-## Module layout
+## Layout
 
 ```text
 backend/
-|- foundation-domain
-|- foundation-application
-|- foundation-infrastructure-oracle
-|- foundation-infrastructure-mock
-|- foundation-infrastructure-legacy
-|- foundation-infrastructure-secrets
-|- foundation-web
-`- foundation-ear
+|- pom.xml
+|- config/
+|- scripts/
+`- src/
+   |- main/java/com/billu/
+   |  |- accounts/
+   |  |- categorization/
+   |  `- foundation/
+   `- main/resources/
+      |- static/
+      `- mock-datasets/
 ```
 
-- `foundation-domain`: modelos base de plataforma.
-- `foundation-application`: casos de uso, validadores y servicios de orquestacion.
-- `foundation-infrastructure-oracle`: conectividad Oracle y repositorio de auditoria.
-- `foundation-infrastructure-mock`: datasets controlados para `local-mock`.
-- `foundation-infrastructure-legacy`: inventario y bridges transitorios `READ_ONLY`.
-- `foundation-infrastructure-secrets`: resolucion local y frontera CyberArk.
-- `foundation-web`: filtros, controladores internos y empaquetado `WAR`.
-- `foundation-ear`: ensamblado final `EAR` para WebSphere 9.
+La aplicacion es un solo modulo Spring Boot 2.7.x compatible con Java 8. La
+separacion de responsabilidades queda en paquetes:
+
+- `domain`: modelos y proyecciones de negocio.
+- `application`: gateways, casos de uso, validadores y auditoria.
+- `infrastructure`: adaptadores Oracle, mock, secrets y bridges read-only.
+- `web`: filtros, controladores internos, DTOs HTTP, metricas y static shell.
 
 ## Runtime flow
 
-1. `CorrelationFilter` genera `correlationId`.
-2. `AccessContextFilter` resuelve metadata minima del actor.
-3. `PlatformApplication` registra los endpoints internos de plataforma.
-4. `PlatformComponentFactory` arma servicios, adaptadores y proveedores.
-5. Los casos de uso publican auditoria y metricas de operacion.
+1. Spring Boot arranca `BilluFoundationApplication`.
+2. `CorrelationFilter` genera `correlationId`.
+3. `AccessContextFilter` resuelve metadata minima del actor.
+4. Jersey publica endpoints internos bajo `/internal/*`.
+5. `PlatformComponentFactory` arma servicios, adaptadores y proveedores.
+6. Los casos de uso publican auditoria y metricas de operacion.
 
 ## Environment strategy
 
@@ -61,12 +63,13 @@ backend/
 
 ## Deployment notes
 
-- El artefacto operativo final es `backend/foundation-ear/target/foundation-ear-0.1.0-SNAPSHOT.ear`.
-- El `EAR` incluye el `WAR` de `foundation-web`.
-- `backend/scripts/verify-ear.sh` valida estructura minima del empaquetado.
-- `tests/integration/websphere9_packaging_smoke_test.sh` deja un smoke reproducible.
+- El artefacto operativo local es `backend/target/billu-backend-0.1.0-SNAPSHOT.jar`.
+- El arranque local recomendado es `.\backend\scripts\run-local-oracle.ps1`.
+- El proyecto ya no genera EAR/WAR por modulo; Spring Boot empaqueta la app y
+  sirve los recursos estaticos desde `backend/src/main/resources/static`.
 
-## Next slices
+## Next modules
 
-Una vez cerrada la foundation, el siguiente slice funcional es `Resumen de Clientes`
-y despues `Categorizacion de Clientes`.
+Los nuevos modulos del menu deben agregarse como paquetes bajo
+`backend/src/main/java/com/billu/<module>/` y, si tienen UI ligera, bajo
+`backend/src/main/resources/static/<module>/`.

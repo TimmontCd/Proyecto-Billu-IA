@@ -15,7 +15,7 @@ coexistencia legacy read-only y frontera explicita hacia Oracle.
 **Primary Dependencies**: Maven multi-module, Servlet 3.1, Jersey/JAX-RS, SLF4J  
 **Storage**: Oracle objetivo; datasets mockeados y bridge legado read-only en primera etapa  
 **Testing**: contract + integration scaffolds bajo `tests/`  
-**Target Platform**: WebSphere 9 compatible, empaquetado `.war` + `.ear`  
+**Target Platform**: Spring Boot 2.7.x local/institucional, empaquetado `.jar`
 **Project Type**: backend multi-module + frontend institucional ligero  
 **Performance Goals**: respuestas principales < 5s en validacion local  
 **Constraints**: Java 8, observabilidad auditable, sin escrituras legacy  
@@ -47,15 +47,15 @@ specs/003-categorizacion-clientes/
 ### Source Code
 
 ```text
-backend/foundation-domain/src/main/java/com/billu/categorization/domain/
-backend/foundation-application/src/main/java/com/billu/categorization/application/
-backend/foundation-infrastructure-mock/src/main/java/com/billu/categorization/infrastructure/mock/
-backend/foundation-infrastructure-legacy/src/main/java/com/billu/categorization/infrastructure/legacy/
-backend/foundation-infrastructure-oracle/src/main/java/com/billu/categorization/infrastructure/oracle/
-backend/foundation-web/src/main/java/com/billu/categorization/web/
+backend/src/main/java/com/billu/categorization/domain/
+backend/src/main/java/com/billu/categorization/application/
+backend/src/main/java/com/billu/categorization/infrastructure/mock/
+backend/src/main/java/com/billu/categorization/infrastructure/legacy/
+backend/src/main/java/com/billu/categorization/infrastructure/oracle/
+backend/src/main/java/com/billu/categorization/web/
 tests/contract/
 tests/integration/
-frontend/customer-categorization/
+backend/src/main/resources/static/customer-categorization/
 ```
 
 ## Phase Outline

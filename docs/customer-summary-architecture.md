@@ -16,17 +16,17 @@ frontend.
 
 ## Layering
 
-- `foundation-domain`: slice projections and export result models
-- `foundation-application`: gateways, validators, use cases and audit logic
-- `foundation-infrastructure-mock`: versioned datasets for `local-mock`
-- `foundation-infrastructure-legacy`: temporary read-only fallback
-- `foundation-infrastructure-oracle`: explicit boundary for future implementation
-- `foundation-web`: JAX-RS controllers, HTTP DTOs, wiring and metrics
+- `com.billu.accounts.domain`: slice projections and export result models
+- `com.billu.accounts.application`: gateways, validators, use cases and audit logic
+- `com.billu.accounts.infrastructure.mock`: versioned datasets for `local-mock`
+- `com.billu.accounts.infrastructure.legacy`: temporary read-only fallback
+- `com.billu.accounts.infrastructure.oracle`: explicit boundary for persistence
+- `com.billu.accounts.web`: JAX-RS controllers, HTTP DTOs, wiring and metrics
 
 ## Source selection
 
 Source selection lives in
-`backend/foundation-web/src/main/java/com/billu/accounts/web/CustomerSummaryComponentFactory.java`
+`backend/src/main/java/com/billu/accounts/web/CustomerSummaryComponentFactory.java`
 and follows this priority:
 
 1. `local-mock`

@@ -9,7 +9,7 @@ for an initial institutional frontend.
 
 - foundation builds with `JDK 8` and `Maven`
 - internal platform endpoints are available
-- mock datasets exist in `foundation-infrastructure-mock`
+- mock datasets exist in `backend/src/main/resources/mock-datasets`
 - legacy access remains read-only during coexistence checks
 
 ## 1. Build base
@@ -29,7 +29,7 @@ mvn -f backend/pom.xml -DskipTests package
 ## 2. Local-mock validation
 
 ```bash
-mvn -f backend/pom.xml -pl foundation-web -am -P local-mock -DskipTests package
+mvn -f backend/pom.xml -DskipTests package
 ```
 
 Expected smoke requests:
@@ -59,7 +59,7 @@ Expected result:
 ## 3. Local-oracle / coexistence validation
 
 ```bash
-mvn -f backend/pom.xml -pl foundation-web -am -P local-oracle -DskipTests package
+mvn -f backend/pom.xml -DskipTests package
 ```
 
 Additional validation:

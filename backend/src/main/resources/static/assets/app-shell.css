@@ -1,0 +1,383 @@
+:root {
+  --bg: #eef3f1;
+  --surface: #ffffff;
+  --surface-soft: #f6faf8;
+  --ink: #173126;
+  --muted: #5f766c;
+  --line: #d7e3dd;
+  --line-strong: #c7d8d1;
+  --primary: #009f9c;
+  --primary-soft: #a1e9d1;
+  --primary-wash: #e2f7f3;
+  --accent: #af7a23;
+  --danger: #9b384c;
+  --shadow: 0 14px 40px rgba(23, 49, 38, 0.08);
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: "Avenir Next", "Segoe UI", Arial, sans-serif;
+  background:
+    radial-gradient(circle at 14% 0%, rgba(161, 233, 209, 0.32), transparent 30%),
+    linear-gradient(180deg, #f7faf8 0%, var(--bg) 100%);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 28px 20px;
+  background: linear-gradient(180deg, #0d4d4a, var(--primary));
+  color: #eef7f2;
+}
+
+.brand {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.brand-sub {
+  margin-top: 6px;
+  color: rgba(238, 247, 242, 0.72);
+}
+
+.menu {
+  display: grid;
+  gap: 8px;
+}
+
+.menu-item {
+  display: block;
+  border: 0;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #eef7f2;
+  cursor: pointer;
+  padding: 10px 14px;
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.menu-item:hover,
+.menu-item.active {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  transform: translateX(1px);
+}
+
+.menu-item.active {
+  box-shadow: inset 3px 0 0 rgba(255, 255, 255, 0.96);
+  font-weight: 700;
+}
+
+.app-shell {
+  width: min(1320px, calc(100% - 20px));
+  margin: 0 auto;
+  padding: 0 0 28px;
+}
+
+.app-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  min-height: 104px;
+}
+
+.title-block {
+  padding-top: 6px;
+}
+
+.title-block h1 {
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+.title-block p {
+  margin-top: 16px;
+  max-width: 780px;
+  font-size: 12px;
+  color: var(--ink);
+}
+
+.workspace {
+  display: grid;
+  gap: 14px;
+}
+
+.status-banner {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid #7bdccc;
+  border-radius: 8px;
+  background: #e7fbf6;
+  color: var(--primary);
+  font-size: 12px;
+}
+
+.status-banner.error {
+  border-color: #e2a7b5;
+  background: #fff2f5;
+  color: var(--danger);
+}
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+.soft-button,
+.primary-button,
+.download-button {
+  min-height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-soft);
+  color: var(--ink);
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.primary-button {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.soft-button {
+  border-color: transparent;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.download-button {
+  min-width: 118px;
+  height: 44px;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.muted-note {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.muted-note strong {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 18px;
+}
+
+.state-table {
+  width: 100%;
+  min-width: 920px;
+  border-collapse: collapse;
+  color: #001f1b;
+}
+
+.state-table th {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-align: left;
+  text-transform: uppercase;
+  padding: 9px 8px;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.state-table td {
+  font-size: 15px;
+  line-height: 1.35;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.table-total-row td,
+.state-table tfoot td {
+  border-bottom: none;
+  background: #eaf6f4;
+  font-weight: 800;
+}
+
+.empty-state {
+  border: 1px dashed var(--line-strong);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  padding: 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.export-log {
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  padding: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.toast {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 20;
+  width: min(440px, calc(100vw - 36px));
+  border-radius: 12px;
+  background: var(--ink);
+  color: #ffffff;
+  box-shadow: 0 14px 34px rgba(23, 49, 38, 0.2);
+  padding: 13px 15px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.toast.error {
+  background: var(--danger);
+}
+
+.placeholder-content {
+  min-height: 100vh;
+  padding: 34px 20px;
+}
+
+.placeholder-panel {
+  max-width: 760px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+
+.placeholder-panel h1 {
+  font-size: 26px;
+  line-height: 1.15;
+}
+
+.placeholder-panel p {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.placeholder-panel code {
+  display: inline-block;
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-soft);
+  color: var(--ink);
+  padding: 8px 10px;
+  font-family: Consolas, "Liberation Mono", monospace;
+  font-size: 13px;
+}
+
+@media (max-width: 1120px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    padding: 16px;
+  }
+
+  .app-header {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .app-shell {
+    width: min(100vw - 14px, 100%);
+  }
+
+  .sidebar {
+    gap: 12px;
+  }
+
+  .brand {
+    font-size: 22px;
+  }
+
+  .brand-sub {
+    font-size: 12px;
+  }
+
+  .app-header {
+    min-height: 0;
+    padding-bottom: 10px;
+  }
+
+  .title-block h1 {
+    font-size: 23px;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+
+  .primary-button,
+  .soft-button {
+    width: 100%;
+  }
+}

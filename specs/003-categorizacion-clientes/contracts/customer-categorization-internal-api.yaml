@@ -10,6 +10,10 @@ paths:
       responses:
         '200':
           description: Dashboard generado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerCategorizationDashboardResponse'
   /internal/customer-categorization/rewards/{rewardsId}:
     get:
       summary: Consulta detalle por ID RECOMPENSAS
@@ -22,18 +26,232 @@ paths:
             type: string
       responses:
         '200':
-          description: Resultado encontrado
+          description: Resultado controlado de busqueda
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerCategorizationLookupResponse'
   /internal/customer-categorization/exports/segment:
     post:
       summary: Genera exportable por segmento
       operationId: exportCustomerCategorizationSegment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerCategorizationExportRequest'
       responses:
         '202':
           description: Exportable generado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerCategorizationExportResponse'
   /internal/customer-categorization/exports/cross-sell:
     post:
       summary: Genera exportable de venta cruzada por segmento
       operationId: exportCustomerCategorizationCrossSell
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerCategorizationExportRequest'
       responses:
         '202':
           description: Exportable generado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerCategorizationExportResponse'
+components:
+  schemas:
+    CustomerCategorizationDashboardResponse:
+      type: object
+      required:
+        - environment
+        - sourceMode
+        - executiveSummary
+        - kpis
+        - segmentSummary
+      properties:
+        dashboardId:
+          type: string
+        environment:
+          type: string
+          example: local-oracle
+        sourceMode:
+          type: string
+          example: ORACLE
+        executiveSummary:
+          type: string
+        correlationId:
+          type: string
+        generatedAt:
+          type: string
+          format: date-time
+        kpis:
+          type: object
+          additionalProperties:
+            type: number
+        segmentSummary:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerSegmentSummary'
+    CustomerSegmentSummary:
+      type: object
+      properties:
+        segmentId:
+          type: string
+          example: Constructores
+        segmentLabel:
+          type: string
+        rule:
+          type: string
+        recommendedCard:
+          type: string
+        recommendedCardBenefits:
+          type: string
+        clients:
+          type: integer
+        sharePct:
+          type: number
+        totalBalance:
+          type: number
+        averageBalance:
+          type: number
+        averageTransactions:
+          type: number
+        averageTenureDays:
+          type: number
+        missingCreditCardClients:
+          type: integer
+        portfolioCompleteClients:
+          type: integer
+        topStates:
+          type: array
+          items:
+            $ref: '#/components/schemas/NamedCount'
+        productAdoption:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductCount'
+        missingProducts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductCount'
+    CustomerCategorizationLookupResponse:
+      type: object
+      required:
+        - rewardsId
+        - totalMatches
+        - rows
+      properties:
+        environment:
+          type: string
+        correlationId:
+          type: string
+        rewardsId:
+          type: string
+        totalMatches:
+          type: integer
+        executiveSummary:
+          type: string
+        fileName:
+          type: string
+          description: Nombre sugerido para descargar el resultado consultado.
+        csvContent:
+          type: string
+          description: CSV listo para descarga directa del resultado consultado.
+        rows:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerCategorizationLookupRow'
+    CustomerCategorizationLookupRow:
+      type: object
+      properties:
+        idRecompensas:
+          type: string
+        nivelClienteId:
+          type: string
+        nivelCliente:
+          type: string
+        reglaNivel:
+          type: string
+        tarjetaSugerida:
+          type: string
+        saldoPromedioHoy:
+          type: number
+        saldoPromedio3Meses:
+          type: number
+        transaccionesTotales:
+          type: integer
+        perfilTransaccional:
+          type: string
+        antiguedadDias:
+          type: integer
+        productosActivos:
+          type: string
+        productosFaltantes:
+          type: string
+        campanaSugerida:
+          type: string
+        detalle:
+          type: object
+          additionalProperties: true
+          description: Fila tabular normalizada para mostrar y descargar el resultado.
+    CustomerCategorizationExportRequest:
+      type: object
+      required:
+        - segmentId
+      properties:
+        segmentId:
+          type: string
+          example: Constructores
+    CustomerCategorizationExportResponse:
+      type: object
+      properties:
+        exportType:
+          type: string
+          enum:
+            - SEGMENT_EXPORT
+            - CROSS_SELL_EXPORT
+        segmentId:
+          type: string
+        segmentLabel:
+          type: string
+        outcome:
+          type: string
+          example: SUCCEEDED
+        fileName:
+          type: string
+        rowCount:
+          type: integer
+        correlationId:
+          type: string
+        summary:
+          type: string
+        csvContent:
+          type: string
+          description: CSV listo para descarga directa del segmento solicitado.
+    NamedCount:
+      type: object
+      properties:
+        stateName:
+          type: string
+        clients:
+          type: integer
+        sharePct:
+          type: number
+    ProductCount:
+      type: object
+      properties:
+        code:
+          type: string
+        label:
+          type: string
+        clients:
+          type: integer
+        sharePct:
+          type: number

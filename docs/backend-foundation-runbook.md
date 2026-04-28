@@ -59,6 +59,7 @@ Activar fallback cuando ocurra cualquiera de estas condiciones:
 
 ## Packaging validation
 
-- Construir `EAR` con `mvn -f backend/pom.xml -pl foundation-ear -am -DskipTests package`.
-- Verificar estructura con `backend/scripts/verify-ear.sh`.
+- Construir la app con `mvn -f backend/pom.xml -DskipTests package`.
+- El artefacto esperado es `backend/target/billu-backend-0.1.0-SNAPSHOT.jar`.
+- Arrancar localmente con `.\backend\scripts\run-local-oracle.ps1`.
 - Registrar el resultado del smoke de empaquetado antes de promover a DEV o QA.

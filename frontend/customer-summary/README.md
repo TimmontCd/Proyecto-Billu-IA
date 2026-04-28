@@ -11,6 +11,13 @@ Primera version institucional del frontend para `Resumen de Clientes`.
 
 ## Ejecutar localmente
 
+Opcion integrada:
+
+1. Levanta el backend en `http://localhost:8080`.
+2. Abre `http://localhost:8080/customer-summary/`.
+
+Opcion estatica con proxy:
+
 1. Levanta el backend en `http://localhost:8080`.
 2. En PowerShell:
 
@@ -23,8 +30,9 @@ cd frontend/customer-summary
 
 ## Notas
 
+- El WAR sirve la misma pantalla desde `/customer-summary/`.
 - El preview server evita problemas de CORS al hacer proxy al backend.
-- La interfaz usa los endpoints del slice ya implementado en foundation.
+- La interfaz muestra estado de backend, ambiente, fuente, Oracle y legacy.
 - Si el backend vive en otra URL:
 
 ```powershell

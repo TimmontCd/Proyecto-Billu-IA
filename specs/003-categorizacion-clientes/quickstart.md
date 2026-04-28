@@ -7,10 +7,11 @@ dashboard, detalle y exportables.
 
 ## Prerequisites
 
-- foundation compilando con `JDK 8` y `Maven`
+- backend Spring Boot compilando con `JDK 8` y `Maven`
 - endpoints internos de plataforma disponibles
-- datasets mockeados del slice en `foundation-infrastructure-mock`
-- Tomcat 9 local con despliegue del WAR `foundation-web`
+- datasets mockeados del slice en `backend/src/main/resources/mock-datasets`
+- Spring Boot 2.7.x en `backend/src`
+- Oracle local disponible en `localhost:1521` cuando se valide `local-oracle`
 
 ## Build base
 
@@ -25,8 +26,10 @@ mvn -f backend/pom.xml -DskipTests package
 ```bash
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-8.jdk/Contents/Home
 mvn -f backend/pom.xml -Dmaven.repo.local=/tmp/billu-m2 -DskipTests package
-cp backend/foundation-web/target/foundation-web-0.1.0-SNAPSHOT.war /tmp/apache-tomcat-9.0.117/webapps/ROOT.war
-/tmp/apache-tomcat-9.0.117/bin/catalina.sh run
+mvn -f backend/pom.xml -DskipTests \
+  -Dspring-boot.run.jvmArguments=-Dbillu.environment=local-mock \
+  -Dspring-boot.run.arguments=--server.port=8080 \
+  spring-boot:run
 ```
 
 ## local-mock smoke
@@ -44,13 +47,13 @@ curl -s -X POST http://localhost:8080/internal/customer-categorization/exports/c
 
 ## local-oracle preparation
 
-```bash
-export BILLU_ENV=local-oracle
-export BILLU_ORACLE_URL='jdbc:oracle:thin:@//host:1521/service'
-export BILLU_ORACLE_USER='billu_read'
-export BILLU_ORACLE_PASSWORD='***'
-mvn -f backend/pom.xml -Dmaven.repo.local=/tmp/billu-m2 -DskipTests package
-BILLU_ENV=local-oracle /tmp/apache-tomcat-9.0.117/bin/catalina.sh run
+```powershell
+$env:BILLU_ENV='local-oracle'
+$env:BILLU_ORACLE_URL='jdbc:oracle:thin:@//localhost:1521/xepdb1'
+$env:BILLU_ORACLE_USER='SYSTEM'
+$env:BILLU_ORACLE_PASSWORD='***'
+mvn -f backend/pom.xml -DskipTests package
+.\backend\scripts\run-local-oracle.ps1
 ```
 
 Comportamiento esperado:
@@ -60,17 +63,23 @@ Comportamiento esperado:
   `BILLU_ORACLE_USER` y `BILLU_ORACLE_PASSWORD`.
 - Si faltan credenciales o no existe conectividad real, la respuesta debe
   fallar explicita y tempranamente.
+- Con credenciales validas, las respuestas deben reportar `sourceMode: ORACLE`
+  y `environment: local-oracle`.
 
 Validacion verificada en esta maquina:
 
-- `GET /internal/customer-categorization/dashboard` devuelve `500` con
-  `Oracle connection settings are incomplete. Configure BILLU_ORACLE_URL, BILLU_ORACLE_USER and BILLU_ORACLE_PASSWORD.`
-- `GET /internal/customer-categorization/rewards/ABC123` sigue la misma ruta
-  Oracle y falla igual mientras no exista configuracion real.
-- `POST /internal/customer-categorization/exports/segment` devuelve `500` con
-  `Oracle connection settings are incomplete. Configure BILLU_ORACLE_URL, BILLU_ORACLE_USER and BILLU_ORACLE_PASSWORD.`
-- `GET /internal/customer-summary/overview` devuelve `500` con
-  `Oracle connection settings are incomplete. Configure BILLU_ORACLE_URL, BILLU_ORACLE_USER and BILLU_ORACLE_PASSWORD.`
+- `GET /internal/customer-categorization/dashboard` devuelve `200`,
+  `sourceMode: ORACLE`, `environment: local-oracle` y 4 clientes analizados.
+- `GET /internal/customer-categorization/rewards/ABC123` devuelve `200` con
+  1 coincidencia Oracle para `ID RECOMPENSAS`.
+- `GET /internal/customer-categorization/rewards/NOEXISTE` devuelve `200`
+  controlado con `totalMatches: 0`.
+- `POST /internal/customer-categorization/exports/segment` devuelve `202`
+  con `categorizacion_cliente_constructores.csv` y `rowCount: 1`.
+- `POST /internal/customer-categorization/exports/cross-sell` devuelve `202`
+  con `venta_cruzada_constructores.csv` y `rowCount: 1`.
+- La pantalla institucional se sirve desde
+  `http://localhost:8080/customer-categorization/`.
 
 ## Smoke esperado
 
@@ -83,4 +92,13 @@ curl -s -X POST http://localhost:8080/internal/customer-categorization/exports/s
 curl -s -X POST http://localhost:8080/internal/customer-categorization/exports/cross-sell \
   -H 'Content-Type: application/json' \
   -d '{"segmentId":"Constructores"}'
+```
+
+## Frontend smoke
+
+```powershell
+Invoke-WebRequest http://localhost:8080/customer-categorization/
+Invoke-WebRequest http://localhost:8080/customer-categorization/app.js
+Invoke-WebRequest http://localhost:8080/customer-categorization/styles.css
+Invoke-WebRequest http://localhost:8080/assets/app-shell.js
 ```
